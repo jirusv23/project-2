@@ -8,17 +8,24 @@ public class BloomShootGameProgram : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    
+    private PlayerLocal _playerLocal;
 
     public BloomShootGameProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+        
+        _graphics.PreferredBackBufferWidth = 1280;
+        _graphics.PreferredBackBufferHeight = 720;
+        
+        _graphics.ApplyChanges();
     }
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        _playerLocal = new PlayerLocal(new Vector2(_graphics.PreferredBackBufferWidth/2, _graphics.PreferredBackBufferHeight/2), GraphicsDevice);
 
         base.Initialize();
     }
@@ -45,7 +52,11 @@ public class BloomShootGameProgram : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
+        _spriteBatch.Begin();
+        
+        _playerLocal.Draw(_spriteBatch);
+        
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }
