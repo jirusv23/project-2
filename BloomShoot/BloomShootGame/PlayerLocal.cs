@@ -10,7 +10,7 @@ public class PlayerLocal
     private Vector2 _position;
     private Texture2D _texture;
     
-    private int _width, _height;
+    public int _width, _height;
 
     private Vector2 _velocity, _acceleration, _deceleration;
     

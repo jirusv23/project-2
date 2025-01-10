@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace BloomShootGame;
 
@@ -8,17 +9,19 @@ public class BloomShootGameProgram : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    
     private PlayerLocal _playerLocal;
+
 
     public BloomShootGameProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
         
-        _graphics.PreferredBackBufferWidth = 1280;
-        _graphics.PreferredBackBufferHeight = 720;
+        _graphics.PreferredBackBufferWidth = 1920;
+        _graphics.PreferredBackBufferHeight = 1080;
+        _graphics.IsFullScreen = true;
         
         _graphics.ApplyChanges();
     }
@@ -54,7 +57,11 @@ public class BloomShootGameProgram : Game
         
         _playerLocal.Move(direction);
 
+        Debug.Write(_playerLocal.Position.X - _graphics.PreferredBackBufferWidth/2 + _playerLocal._width/2);
+        Debug.Write("        ");
+        Debug.WriteLine(_playerLocal.Position.Y - _graphics.PreferredBackBufferHeight / 2 + _playerLocal._height/2);
         base.Update(gameTime);
+
     }
 
     protected override void Draw(GameTime gameTime)
