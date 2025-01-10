@@ -39,18 +39,27 @@ public class BloomShootGameProgram : Game
 
     protected override void Update(GameTime gameTime)
     {
+        var KeyboardState = Keyboard.GetState();
+        
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        Vector2 direction = Vector2.Zero;
+        
+        if (KeyboardState.IsKeyDown(Keys.W)) { direction.Y -= 1; }
+        if (KeyboardState.IsKeyDown(Keys.S)) { direction.Y += 1; }
+        if (KeyboardState.IsKeyDown(Keys.A)) { direction.X -= 1; }
+        if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
+        
+        _playerLocal.Move(direction);
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        GraphicsDevice.Clear(Color.Black);
 
         _spriteBatch.Begin();
         
