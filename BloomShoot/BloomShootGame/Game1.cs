@@ -49,4 +49,9 @@ public class BloomShootGameProgram : Game
 
         base.Draw(gameTime);
     }
+
+    protected override void UnloadContent()
+    {
+        // TODO: zde zavřít klienta pro multiplayer
+    }
 }
