@@ -10,7 +10,10 @@ public class BloomShootGameProgram : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private PlayerLocal _playerLocal;
+    private PlayerOther _playerOther;
     private SpriteFont _font;
+    
+    private Vector2 _middleOfScreen;
 
     public BloomShootGameProgram()
     {
@@ -28,8 +31,11 @@ public class BloomShootGameProgram : Game
 
     protected override void Initialize()
     {
-        _playerLocal = new PlayerLocal(new Vector2(_graphics.PreferredBackBufferWidth/2, _graphics.PreferredBackBufferHeight/2), GraphicsDevice);
-
+        _middleOfScreen = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+        
+        _playerLocal = new PlayerLocal(GraphicsDevice, _middleOfScreen);
+        _playerOther = new PlayerOther(GraphicsDevice, _middleOfScreen);
+        
         base.Initialize();
     }
 
@@ -69,10 +75,10 @@ public class BloomShootGameProgram : Game
         _spriteBatch.Begin();
         
         _playerLocal.Draw(_spriteBatch);
+        _playerOther.Draw(_spriteBatch);
         
         // souřadnice od středu
         _spriteBatch.DrawString(_font,  (int)(_playerLocal.Position.X - _graphics.PreferredBackBufferWidth/2) + _playerLocal._width/2 + "    " + (int)(_playerLocal.Position.Y - _graphics.PreferredBackBufferHeight / 2 + _playerLocal._height/2), Vector2.Zero, Color.White);
-        
         // normální souřadnice
         _spriteBatch.DrawString(_font, $"{(int)_playerLocal.Position.X} | {(int)_playerLocal.Position.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.White);
         

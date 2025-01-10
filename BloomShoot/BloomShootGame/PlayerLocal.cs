@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,8 +13,10 @@ public class PlayerLocal
     public int _width, _height;
 
     private Vector2 _velocity, _acceleration, _deceleration;
+    private List<Bullet> _bullets;
+
     
-    public PlayerLocal(Vector2 position, GraphicsDevice graphicsDevice)
+    public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position)
     {
 
         _width = 30; _height = 30;
@@ -57,6 +59,9 @@ public class PlayerLocal
         else if (_velocity.X < 0) { _velocity.X += _deceleration.X; }
         if (_velocity.Y > 0) { _velocity.Y -= _deceleration.Y; }
         else if (_velocity.Y < 0) { _velocity.Y += _deceleration.Y; }
+        
+        if (double.Abs(_velocity.X) < 0.05f) { _velocity.X = 0; }
+        if (double.Abs(_velocity.Y) < 0.05f) { _velocity.Y = 0; }
         
         _position += _velocity;
     }
