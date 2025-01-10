@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
+
 
 namespace BloomShootGame;
 
@@ -10,7 +10,7 @@ public class BloomShootGameProgram : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private PlayerLocal _playerLocal;
-
+    private SpriteFont _font;
 
     public BloomShootGameProgram()
     {
@@ -36,6 +36,7 @@ public class BloomShootGameProgram : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        _font = Content.Load<SpriteFont>("Font1");
 
         // TODO: use this.Content to load your game content here
     }
@@ -57,9 +58,6 @@ public class BloomShootGameProgram : Game
         
         _playerLocal.Move(direction);
 
-        Debug.Write(_playerLocal.Position.X - _graphics.PreferredBackBufferWidth/2 + _playerLocal._width/2);
-        Debug.Write("        ");
-        Debug.WriteLine(_playerLocal.Position.Y - _graphics.PreferredBackBufferHeight / 2 + _playerLocal._height/2);
         base.Update(gameTime);
 
     }
@@ -71,6 +69,7 @@ public class BloomShootGameProgram : Game
         _spriteBatch.Begin();
         
         _playerLocal.Draw(_spriteBatch);
+        _spriteBatch.DrawString(_font,  (int)(_playerLocal.Position.X - _graphics.PreferredBackBufferWidth/2) + _playerLocal._width/2 + "    " + (int)(_playerLocal.Position.Y - _graphics.PreferredBackBufferHeight / 2 + _playerLocal._height/2), Vector2.Zero, Color.White);
         
         _spriteBatch.End();
 
