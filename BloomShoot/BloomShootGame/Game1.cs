@@ -69,7 +69,12 @@ public class BloomShootGameProgram : Game
         _spriteBatch.Begin();
         
         _playerLocal.Draw(_spriteBatch);
+        
+        // souřadnice od středu
         _spriteBatch.DrawString(_font,  (int)(_playerLocal.Position.X - _graphics.PreferredBackBufferWidth/2) + _playerLocal._width/2 + "    " + (int)(_playerLocal.Position.Y - _graphics.PreferredBackBufferHeight / 2 + _playerLocal._height/2), Vector2.Zero, Color.White);
+        
+        // normální souřadnice
+        _spriteBatch.DrawString(_font, $"{(int)_playerLocal.Position.X} | {(int)_playerLocal.Position.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.White);
         
         _spriteBatch.End();
 
