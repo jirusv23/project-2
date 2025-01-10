@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace BloomShootGame;
 
-public class Game1 : Game
+public class BloomShootGameProgram : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
-    public Game1()
+    public BloomShootGameProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";

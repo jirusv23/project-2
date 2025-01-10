@@ -1,2 +1,2 @@
-﻿using var game = new BloomShootGame.Game1();
+﻿using var game = new BloomShootGame.BloomShootGameProgram();
 game.Run();
