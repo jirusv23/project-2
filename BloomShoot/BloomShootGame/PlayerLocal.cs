@@ -41,8 +41,6 @@ public class PlayerLocal
         
         _texture.SetData(colors);
     }
-    
-    public Vector2 Position => _position;
 
     public void Draw(SpriteBatch spriteBatch)
     {
