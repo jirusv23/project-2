@@ -15,6 +15,9 @@ public class BloomShootMenuProgram : Game
     
     private Vector2 _middleOfScreen;
 
+    private int _selectedGameSettings;
+    public int SelectedGameSettings => _selectedGameSettings;
+
     public BloomShootMenuProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
