@@ -8,6 +8,7 @@ namespace BloomShootGame;
 public class PlayerLocal
 {
     private Vector2 _position;
+    public Vector2 Position => _position;
     private Texture2D _texture;
     
     public int _width, _height;
