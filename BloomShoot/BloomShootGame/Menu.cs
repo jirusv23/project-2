@@ -58,7 +58,7 @@ public class BloomShootMenuProgram : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Black);
+        GraphicsDevice.Clear(Color.Yellow);
 
         _spriteBatch.Begin();
         _spriteBatch.End();
