@@ -7,7 +7,7 @@ internal class Program
         using var menu = new BloomShootMenuProgram();
         menu.Run();
         
-        using var game = new BloomShootGame.BloomShootGameProgram();
+        using var game = new BloomShootGameProgram();
         game.Run(); 
     }
 }

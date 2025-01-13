@@ -22,9 +22,8 @@ public class BloomShootMenuProgram : Game
         IsMouseVisible = true;
 
         
-        _graphics.PreferredBackBufferWidth = 1920;
-        _graphics.PreferredBackBufferHeight = 1080;
-        _graphics.IsFullScreen = true;
+        _graphics.PreferredBackBufferWidth = 1280;
+        _graphics.PreferredBackBufferHeight = 720;
         
         _graphics.ApplyChanges();
     }
