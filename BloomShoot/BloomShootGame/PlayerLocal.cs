@@ -15,7 +15,6 @@ public class PlayerLocal
 
     private Vector2 _velocity, _acceleration, _deceleration;
     private List<Bullet> _bullets;
-
     
     public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position)
     {

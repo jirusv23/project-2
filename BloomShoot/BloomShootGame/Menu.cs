@@ -23,7 +23,6 @@ public class BloomShootMenuProgram : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-
         
         _graphics.PreferredBackBufferWidth = 1280;
         _graphics.PreferredBackBufferHeight = 720;
@@ -68,8 +67,5 @@ public class BloomShootMenuProgram : Game
         base.Draw(gameTime);
     }
 
-    protected override void UnloadContent()
-    {
-        // TODO: zde zavřít klienta pro multiplayer
-    }
+    protected override void UnloadContent() { }
 }
