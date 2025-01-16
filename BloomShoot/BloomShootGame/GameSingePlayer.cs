@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BloomShootGame;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -10,6 +11,10 @@ public class BloomShootGameSinglePlayerProgram : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
+    private Vector2 _middleOfScreen;
+    
+    private PlayerLocal _player;
+    
     public BloomShootGameSinglePlayerProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -19,7 +24,9 @@ public class BloomShootGameSinglePlayerProgram : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        _middleOfScreen = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+
+        _player = new PlayerLocal(GraphicsDevice, _middleOfScreen);
 
         base.Initialize();
     }
@@ -37,7 +44,20 @@ public class BloomShootGameSinglePlayerProgram : Game
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        var KeyboardState = Keyboard.GetState();
+        
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+            Keyboard.GetState().IsKeyDown(Keys.Escape))
+            Exit();
+
+        Vector2 direction = Vector2.Zero;
+        
+        if (KeyboardState.IsKeyDown(Keys.W)) { direction.Y -= 1; }
+        if (KeyboardState.IsKeyDown(Keys.S)) { direction.Y += 1; }
+        if (KeyboardState.IsKeyDown(Keys.A)) { direction.X -= 1; }
+        if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
+        
+        _player.Move(direction);
 
         base.Update(gameTime);
     }
@@ -46,8 +66,12 @@ public class BloomShootGameSinglePlayerProgram : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
+        _spriteBatch.Begin();
+        
+        _player.Draw(_spriteBatch);
 
+        _spriteBatch.End();
+        
         base.Draw(gameTime);
     }
 }
