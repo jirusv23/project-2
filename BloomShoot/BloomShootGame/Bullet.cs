@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BloomShootGame;
@@ -49,5 +50,15 @@ public class Bullet
             }
         }
         _texture.SetData(colorData);
+    }
+
+    private Vector2 _directionOfBullet(Vector2 position, Vector2 mousePosition)
+    {
+        Vector2 direction = mousePosition - position;
+        direction.Normalize();
+        
+        Console.WriteLine(direction);
+        
+        return direction;
     }
 }
