@@ -56,11 +56,16 @@ public class MultiplayerMenu : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || KeyboardState.IsKeyDown(Keys.Escape)) Exit();
         
         _newKeyboardState = KeyboardState;
-        
         if (_passwordBox.WithinBounds(new Vector2(mouseState.X + 20, mouseState.Y + 20))) {CheckHeldCharacters();}
         if (_ipAddressBox.WithinBounds(new Vector2(mouseState.X + 20, mouseState.Y + 20))) CheckHeldCharacters2();
-
         _oldKeyboardState = _newKeyboardState;
+
+        if (KeyboardState.IsKeyDown(Keys.Enter))
+        {
+            _ipAddress = _ipAddressBox.GetText();
+            _password = _passwordBox.GetText();
+            Exit();
+        }
         
         base.Update(gameTime);
     }
@@ -72,7 +77,10 @@ public class MultiplayerMenu : Game
         _spriteBatch.Begin();
         
         _passwordBox.Draw(_spriteBatch);
+        _spriteBatch.DrawString(_font, "Password:", new Vector2(_passwordBox.Position.X, _passwordBox.Position.Y - 55), Color.White);
+        
         _ipAddressBox.Draw(_spriteBatch);
+        _spriteBatch.DrawString(_font, "IP address:", new Vector2(_ipAddressBox.Position.X, _ipAddressBox.Position.Y - 55), Color.White);
         
         _spriteBatch.End();
 
@@ -83,7 +91,7 @@ public class MultiplayerMenu : Game
     
     private void CheckHeldCharacters()
     {
-        if (_newKeyboardState.IsKeyDown(Keys.Enter)) { _passwordBox.GetText(); }
+        if (_newKeyboardState.IsKeyDown(Keys.Enter)) { }
         else {
             if (_newKeyboardState.IsKeyDown(Keys.Back)) { if (!_oldKeyboardState.IsKeyDown(Keys.Back)) _passwordBox.DelLetter(); }
             if (_newKeyboardState.IsKeyDown(Keys.Space)) { if (!_oldKeyboardState.IsKeyDown(Keys.Space)) _passwordBox.UpdateText(" "); }
@@ -148,6 +156,19 @@ public class MultiplayerMenu : Game
             if (_newKeyboardState.IsKeyDown(Keys.B)) { if (!_oldKeyboardState.IsKeyDown(Keys.B)) _ipAddressBox.UpdateText("b"); }
             if (_newKeyboardState.IsKeyDown(Keys.N)) { if (!_oldKeyboardState.IsKeyDown(Keys.N)) _ipAddressBox.UpdateText("n"); }
             if (_newKeyboardState.IsKeyDown(Keys.M)) { if (!_oldKeyboardState.IsKeyDown(Keys.M)) _ipAddressBox.UpdateText("m"); }
+
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad0)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad0)) _ipAddressBox.UpdateText("0"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad1)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad1)) _ipAddressBox.UpdateText("1"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad2)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad2)) _ipAddressBox.UpdateText("2"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad3)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad3)) _ipAddressBox.UpdateText("3"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad4)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad4)) _ipAddressBox.UpdateText("4"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad5)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad5)) _ipAddressBox.UpdateText("5"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad6)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad6)) _ipAddressBox.UpdateText("6"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad7)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad7)) _ipAddressBox.UpdateText("7"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad8)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad8)) _ipAddressBox.UpdateText("8"); }
+            if (_newKeyboardState.IsKeyDown(Keys.NumPad9)) { if (!_oldKeyboardState.IsKeyDown(Keys.NumPad9)) _ipAddressBox.UpdateText("9"); }
+            
+            if (_newKeyboardState.IsKeyDown(Keys.OemPeriod)) { if (!_oldKeyboardState.IsKeyDown(Keys.OemPeriod)) _ipAddressBox.UpdateText("."); }
         }
     }
 }

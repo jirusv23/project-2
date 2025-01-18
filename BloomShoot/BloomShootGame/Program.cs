@@ -23,7 +23,7 @@ internal class Program
                         gameMenu.Run();
                         using (var game = new BloomShootGameProgram(gameMenu.Password, gameMenu.IpAddress))
                         {
-                            //game.Run();
+                            game.Run();
                         }
                     }
                     break;

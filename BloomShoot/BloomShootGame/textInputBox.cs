@@ -12,7 +12,7 @@ public class textInputBox
     private Rectangle _rectangle;
     private SpriteFont _font;
     private Vector2 _position;
-
+    public Vector2 Position => _position;
     private Vector2 _size;
     
     public textInputBox(Vector2 position, GraphicsDevice graphicsDevice, int width, int height, SpriteFont font)
@@ -51,9 +51,8 @@ public class textInputBox
     public string GetText()
     {
         string text = _text;
-        _text = string.Empty;
-        
-        Console.WriteLine(text);
+        //_text = string.Empty;
+
         return text;
     }
     
