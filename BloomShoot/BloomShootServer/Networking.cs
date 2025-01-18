@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -13,9 +14,14 @@ public class Server : IDisposable
     private bool isRunning = false;
     private bool isDisposed = false;
     private int port;
+    
+    private string[] _serverReceivedMessages;
+    public string[] ServerReceivedMessages => _serverReceivedMessages;
 
     public Server(string password, int port)
     {
+        _serverReceivedMessages = [];
+        
         server = new NetManager(listener);
         if (!server.Start(port))
             throw new Exception("Failed to start server");
@@ -62,6 +68,8 @@ public class Server : IDisposable
         {
             string message = reader.GetString();
             Console.WriteLine($"Server received from {peer.Address}: {message}");
+
+            _serverReceivedMessages.Append(message);
             
             // Echo the message back to all clients
             BroadcastMessage($"Client {peer.Address} says: {message}");

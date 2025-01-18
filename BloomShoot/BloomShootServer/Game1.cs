@@ -18,7 +18,7 @@ public class Game1 : Game
     private SpriteFont _fontSmol;
     private textInputBox _inputBox;
     
-    private int[] _inputBoxSize = new int[]{100, 50};
+    private int[] _inputBoxSize = new int[]{300, 70};
     private KeyboardState _oldKeyboardState;
     private KeyboardState _newKeyboardState;
 
@@ -33,8 +33,6 @@ public class Game1 : Game
     {
         _middleOfScreen = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
         
-        
-        
         base.Initialize();
     }
 
@@ -44,7 +42,7 @@ public class Game1 : Game
         
         _fontBig = Content.Load<SpriteFont>("big_font");
         _fontSmol = Content.Load<SpriteFont>("small_font");
-        _inputBox = new textInputBox(new Vector2(_middleOfScreen.X - _inputBoxSize[0]/2, _middleOfScreen.Y - _inputBoxSize[1]/2), GraphicsDevice, 100, 50, _fontSmol);
+        _inputBox = new textInputBox(new Vector2(_middleOfScreen.X - _inputBoxSize[0]/2, _middleOfScreen.Y - _inputBoxSize[1]/2), GraphicsDevice, _inputBoxSize[0], _inputBoxSize[1], _fontSmol);
     }
 
     protected override void Update(GameTime gameTime)
@@ -57,8 +55,6 @@ public class Game1 : Game
 
         if (_server == null)
         {
-            Console.WriteLine("test");
-            
             CheckHeldCharacters(_newKeyboardState);
         }
         else { _server.Update(); }
@@ -73,6 +69,16 @@ public class Game1 : Game
         _spriteBatch.Begin();
         
         if (_server == null) _inputBox.Draw(_spriteBatch);
+        else
+        {
+            Vector2 size = _fontBig.MeasureString("Server runs!");
+            _spriteBatch.DrawString(_fontBig, "Server runs!", new Vector2(_middleOfScreen.X - size.X/2, _middleOfScreen.Y - size.Y/2 - 200), Color.Black);
+            
+            for (int i = 0; i < _server.ServerReceivedMessages.Length; i++)
+            {
+                _spriteBatch.DrawString(_fontSmol, _server.ServerReceivedMessages[i], new Vector2(75, 150 + i*15), Color.Black);
+            }
+        }
         
         _spriteBatch.End();
 
