@@ -41,7 +41,7 @@ public class Server : IDisposable
 
     public void SendMessageToClient(NetPeer peer, string message)
     {
-        if (peer.ConnectionState == ConnectionState.Connected)  // TODO: .Connected nenalezeno??
+        if (peer.ConnectionState == ConnectionState.Connected)
         {
             NetDataWriter writer = new NetDataWriter();
             writer.Put(message);
