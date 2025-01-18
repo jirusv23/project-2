@@ -8,8 +8,12 @@ public class MultiplayerMenu : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private SpriteFont _font;
 
     private Vector2 _middleOfScreen;
+    
+    private string _password, _ipAddress;
+    public string Password => _password; public string IpAddress => _ipAddress;
     
     public MultiplayerMenu()
     {

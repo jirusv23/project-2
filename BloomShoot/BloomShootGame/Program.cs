@@ -21,7 +21,7 @@ internal class Program
                     using (var gameMenu = new MultiplayerMenu())
                     {
                         gameMenu.Run();
-                        using (var game = new BloomShootGameProgram())
+                        using (var game = new BloomShootGameProgram(gameMenu.Password, gameMenu.IpAddress))
                             game.Run();
                     }
                     break;

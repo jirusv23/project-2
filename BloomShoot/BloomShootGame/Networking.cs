@@ -11,6 +11,7 @@ public class Client
     private EventBasedNetListener listener = new EventBasedNetListener();
     private NetManager client;
     private bool isRunning = false;
+    public bool IsRunning => isRunning;
     private NetPeer serverPeer;
     
     public Client(string password, string hostIP)

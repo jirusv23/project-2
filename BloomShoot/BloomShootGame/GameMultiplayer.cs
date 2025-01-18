@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Security.Cryptography;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -15,7 +16,10 @@ public class BloomShootGameProgram : Game
     
     private Vector2 _middleOfScreen;
 
-    public BloomShootGameProgram()
+    private Client _client;
+    private string _password, _ip;
+
+    public BloomShootGameProgram(string password, string ip)
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
@@ -24,6 +28,9 @@ public class BloomShootGameProgram : Game
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
         _graphics.IsFullScreen = true;
+        
+        _password = password;
+        _ip = ip;
         
         _graphics.ApplyChanges();
     }
@@ -34,6 +41,8 @@ public class BloomShootGameProgram : Game
         
         _playerLocal = new PlayerLocal(GraphicsDevice, _middleOfScreen);
         _playerOther = new PlayerOther(GraphicsDevice, _middleOfScreen);
+
+        _client = new Client(_password, _ip);
         
         base.Initialize();
     }
