@@ -18,6 +18,12 @@ public class BloomShootMenuProgram : Game
     private int _selectedGameSettings;
     public int SelectedGameSettings => _selectedGameSettings;
 
+    private Color _buttonColor = Color.White;
+
+    private float _firstButtonHeight = 100f; private float _buttonDistance = 50f;
+    private Vector2 _buttonSize = new Vector2(250, 100);
+    private MenuButton _buttonSingle; private MenuButton _buttonMulti; private MenuButton _buttonExit;
+
     public BloomShootMenuProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -33,6 +39,10 @@ public class BloomShootMenuProgram : Game
     protected override void Initialize()
     {
         _middleOfScreen = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+
+        _buttonSingle = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight), _buttonSize, Color.White, 1);
+        _buttonMulti = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonSize.Y + _buttonDistance), _buttonSize, Color.White, 0);
+        _buttonExit = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonSize.Y*2 + _buttonDistance*2), _buttonSize, Color.White, 2);
         
         base.Initialize();
     }
@@ -59,9 +69,14 @@ public class BloomShootMenuProgram : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Yellow);
+        GraphicsDevice.Clear(Color.DarkBlue);
 
         _spriteBatch.Begin();
+        
+        _buttonSingle.Draw(_spriteBatch);
+        _buttonMulti.Draw(_spriteBatch);
+        _buttonExit.Draw(_spriteBatch);
+        
         _spriteBatch.End();
 
         base.Draw(gameTime);
