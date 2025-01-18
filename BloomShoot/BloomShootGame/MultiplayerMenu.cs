@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -43,8 +44,8 @@ public class MultiplayerMenu : Game
         
         _font = Content.Load<SpriteFont>("ButtonFont");
         
-        _passwordBox = new textInputBox(new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight), GraphicsDevice, (int)_buttonSize.X, (int)_buttonSize.Y, _font);
-        _ipAddressBox =  new textInputBox(new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonDistance), GraphicsDevice, (int)_buttonSize.X, (int)_buttonSize.Y, _font);
+        _ipAddressBox = new textInputBox(new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight), GraphicsDevice, (int)_buttonSize.X, (int)_buttonSize.Y, _font);
+        _passwordBox =  new textInputBox(new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonDistance), GraphicsDevice, (int)_buttonSize.X, (int)_buttonSize.Y, _font);
     }
 
     protected override void Update(GameTime gameTime)
@@ -54,9 +55,13 @@ public class MultiplayerMenu : Game
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || KeyboardState.IsKeyDown(Keys.Escape)) Exit();
         
-        if (_passwordBox.WithinBounds(new Vector2(mouseState.X, mouseState.Y))) CheckHeldCharacters(KeyboardState); 
-        if (_passwordBox.WithinBounds(new Vector2(mouseState.X, mouseState.Y))) CheckHeldCharacters2(KeyboardState);
+        _newKeyboardState = KeyboardState;
+        
+        if (_passwordBox.WithinBounds(new Vector2(mouseState.X + 20, mouseState.Y + 20))) {CheckHeldCharacters();}
+        if (_ipAddressBox.WithinBounds(new Vector2(mouseState.X + 20, mouseState.Y + 20))) CheckHeldCharacters2();
 
+        _oldKeyboardState = _newKeyboardState;
+        
         base.Update(gameTime);
     }
     
@@ -76,9 +81,9 @@ public class MultiplayerMenu : Game
     
     protected override void UnloadContent() { }
     
-    private void CheckHeldCharacters(KeyboardState keyboardState)
+    private void CheckHeldCharacters()
     {
-        if (keyboardState.IsKeyDown(Keys.Enter)) { }
+        if (_newKeyboardState.IsKeyDown(Keys.Enter)) { _passwordBox.GetText(); }
         else {
             if (_newKeyboardState.IsKeyDown(Keys.Back)) { if (!_oldKeyboardState.IsKeyDown(Keys.Back)) _passwordBox.DelLetter(); }
             if (_newKeyboardState.IsKeyDown(Keys.Space)) { if (!_oldKeyboardState.IsKeyDown(Keys.Space)) _passwordBox.UpdateText(" "); }
@@ -109,12 +114,11 @@ public class MultiplayerMenu : Game
             if (_newKeyboardState.IsKeyDown(Keys.N)) { if (!_oldKeyboardState.IsKeyDown(Keys.N)) _passwordBox.UpdateText("n"); }
             if (_newKeyboardState.IsKeyDown(Keys.M)) { if (!_oldKeyboardState.IsKeyDown(Keys.M)) _passwordBox.UpdateText("m"); }
         }
-        _oldKeyboardState = _newKeyboardState;
     }
     
-    private void CheckHeldCharacters2(KeyboardState keyboardState)
+    private void CheckHeldCharacters2()
     {
-        if (keyboardState.IsKeyDown(Keys.Enter)) { }
+        if (_newKeyboardState.IsKeyDown(Keys.Enter)) { }
         else {
             if (_newKeyboardState.IsKeyDown(Keys.Back)) { if (!_oldKeyboardState.IsKeyDown(Keys.Back)) _ipAddressBox.DelLetter(); }
             if (_newKeyboardState.IsKeyDown(Keys.Space)) { if (!_oldKeyboardState.IsKeyDown(Keys.Space)) _ipAddressBox.UpdateText(" "); }
@@ -145,6 +149,5 @@ public class MultiplayerMenu : Game
             if (_newKeyboardState.IsKeyDown(Keys.N)) { if (!_oldKeyboardState.IsKeyDown(Keys.N)) _ipAddressBox.UpdateText("n"); }
             if (_newKeyboardState.IsKeyDown(Keys.M)) { if (!_oldKeyboardState.IsKeyDown(Keys.M)) _ipAddressBox.UpdateText("m"); }
         }
-        _oldKeyboardState = _newKeyboardState;
     }
 }

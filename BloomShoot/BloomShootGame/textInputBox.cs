@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BloomShootGame;
@@ -52,6 +53,7 @@ public class textInputBox
         string text = _text;
         _text = string.Empty;
         
+        Console.WriteLine(text);
         return text;
     }
     
