@@ -52,7 +52,6 @@ public class BloomShootMenuProgram : Game
         _buttonSingle = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight), _buttonSize, Color.White, 1, _buttonFont);
         _buttonMulti = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonSize.Y + _buttonDistance), _buttonSize, Color.White, 0, _buttonFont);
         _buttonExit = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonSize.Y*2 + _buttonDistance*2), _buttonSize, Color.White, 2, _buttonFont);
-
     }
 
     protected override void Update(GameTime gameTime)
