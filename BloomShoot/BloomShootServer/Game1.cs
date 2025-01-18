@@ -33,7 +33,7 @@ public class Game1 : Game
     {
         _middleOfScreen = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
         
-        _inputBox = new textInputBox(new Vector2(_middleOfScreen.X - _inputBoxSize[0]/2, _middleOfScreen.Y - _inputBoxSize[1]/2), GraphicsDevice, 100, 50, _fontSmol);
+        
         
         base.Initialize();
     }
@@ -44,6 +44,7 @@ public class Game1 : Game
         
         _fontBig = Content.Load<SpriteFont>("big_font");
         _fontSmol = Content.Load<SpriteFont>("small_font");
+        _inputBox = new textInputBox(new Vector2(_middleOfScreen.X - _inputBoxSize[0]/2, _middleOfScreen.Y - _inputBoxSize[1]/2), GraphicsDevice, 100, 50, _fontSmol);
     }
 
     protected override void Update(GameTime gameTime)
@@ -77,10 +78,15 @@ public class Game1 : Game
 
         base.Draw(gameTime);
     }
+
+    private void StartServer()
+    {
+        _server = new Server(_inputBox.GetText(), 9050);
+    }
     
     private void CheckHeldCharacters(KeyboardState keyboardState)
     {
-        if (keyboardState.IsKeyDown(Keys.Enter)) { }
+        if (keyboardState.IsKeyDown(Keys.Enter)) { StartServer(); }
         else {
             if (_newKeyboardState.IsKeyDown(Keys.Back)) { if (!_oldKeyboardState.IsKeyDown(Keys.Back)) _inputBox.DelLetter(); }
             if (_newKeyboardState.IsKeyDown(Keys.Space)) { if (!_oldKeyboardState.IsKeyDown(Keys.Space)) _inputBox.UpdateText(" "); }
