@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LiteNetLib;
@@ -67,12 +68,17 @@ public class Server : IDisposable
         try
         {
             string message = reader.GetString();
-            Console.WriteLine($"Server received from {peer.Address}: {message}");
+            if (message != "")
+            {
+                Console.WriteLine($"Server received from {peer.Address}: {message}");
 
-            _serverReceivedMessages.Append(message);
-            
-            // Echo the message back to all clients
-            BroadcastMessage($"Client {peer.Address} says: {message}");
+                List<string> serverReceivedMessagesList = _serverReceivedMessages.ToList();
+                serverReceivedMessagesList.Add(message);
+                _serverReceivedMessages = serverReceivedMessagesList.ToArray();
+
+                // Echo the message back to all clients
+                BroadcastMessage($"Client {peer.Address} says: {message}");
+            }
         }
         finally
         {

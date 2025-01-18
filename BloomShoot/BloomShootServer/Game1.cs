@@ -73,9 +73,11 @@ public class Game1 : Game
         {
             Vector2 size = _fontBig.MeasureString("Server runs!");
             _spriteBatch.DrawString(_fontBig, "Server runs!", new Vector2(_middleOfScreen.X - size.X/2, _middleOfScreen.Y - size.Y/2 - 200), Color.Black);
-            
+
+            Console.WriteLine($"{_server.ServerReceivedMessages.Length}");
             for (int i = 0; i < _server.ServerReceivedMessages.Length; i++)
             {
+                Console.WriteLine($"{_server.ServerReceivedMessages[i]}");
                 _spriteBatch.DrawString(_fontSmol, _server.ServerReceivedMessages[i], new Vector2(75, 150 + i*15), Color.Black);
             }
         }
