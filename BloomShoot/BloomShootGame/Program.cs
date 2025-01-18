@@ -10,7 +10,7 @@ internal class Program
         {
             menu.Run();
 
-            // After menu closes, check which game was selected
+            // Po ukončení hry se dle výběru pokračuje
             switch (menu.SelectedGameSettings)
             {
                 case 0:
@@ -18,8 +18,12 @@ internal class Program
                         game.Run();
                     break;
                 case 1:
-                    using (var game = new BloomShootGameSinglePlayerProgram())
-                        game.Run();
+                    using (var gameMenu = new MultiplayerMenu())
+                    {
+                        gameMenu.Run();
+                        using (var game = new BloomShootGameSinglePlayerProgram())
+                            game.Run();
+                    }
                     break;
                 case 2:
                     break;
