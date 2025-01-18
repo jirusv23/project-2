@@ -60,22 +60,22 @@ public class BloomShootMenuProgram : Game
         var mouseState = Mouse.GetState();
         
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
+            KeyboardState.IsKeyDown(Keys.Escape))
             Exit();
 
         if (mouseState.LeftButton == ButtonState.Pressed)
         {
             if (_buttonSingle.WithinBounds(new Vector2(mouseState.X, mouseState.Y)))
             {
-                _selectedGameSettings = 1;
+                _selectedGameSettings = 1; Exit();
             }
             else if (_buttonMulti.WithinBounds(new Vector2(mouseState.X, mouseState.Y)))
             {
-                _selectedGameSettings = 0;
+                _selectedGameSettings = 0; Exit();
             }
             else if (_buttonExit.WithinBounds(new Vector2(mouseState.X, mouseState.Y)))
             {
-                _selectedGameSettings = 2;
+                _selectedGameSettings = 2; Exit();
             }
         }
 
