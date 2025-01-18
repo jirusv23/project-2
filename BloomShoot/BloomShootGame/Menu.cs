@@ -63,13 +63,24 @@ public class BloomShootMenuProgram : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        
-        if (_buttonSingle.WithinBounds(new Vector2(mouseState.X, mouseState.Y))) {}
-        else if (_buttonMulti.WithinBounds(new Vector2(mouseState.X, mouseState.Y))) {}
-        else if (_buttonExit.WithinBounds(new Vector2(mouseState.X, mouseState.Y))) {}
+
+        if (mouseState.LeftButton == ButtonState.Pressed)
+        {
+            if (_buttonSingle.WithinBounds(new Vector2(mouseState.X, mouseState.Y)))
+            {
+                _selectedGameSettings = 1;
+            }
+            else if (_buttonMulti.WithinBounds(new Vector2(mouseState.X, mouseState.Y)))
+            {
+                _selectedGameSettings = 0;
+            }
+            else if (_buttonExit.WithinBounds(new Vector2(mouseState.X, mouseState.Y)))
+            {
+                _selectedGameSettings = 2;
+            }
+        }
 
         base.Update(gameTime);
-
     }
 
     protected override void Draw(GameTime gameTime)
