@@ -15,7 +15,7 @@ public class BloomShootMenuProgram : Game
     
     private Vector2 _middleOfScreen;
 
-    private int _selectedGameSettings;
+    private int _selectedGameSettings = 2;
     public int SelectedGameSettings => _selectedGameSettings;
 
     private Color _buttonColor = Color.White;
