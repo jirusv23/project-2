@@ -23,6 +23,7 @@ public class BloomShootMenuProgram : Game
     private float _firstButtonHeight = 100f; private float _buttonDistance = 50f;
     private Vector2 _buttonSize = new Vector2(250, 100);
     private MenuButton _buttonSingle; private MenuButton _buttonMulti; private MenuButton _buttonExit;
+    private SpriteFont _buttonFont;
 
     public BloomShootMenuProgram()
     {
@@ -39,11 +40,6 @@ public class BloomShootMenuProgram : Game
     protected override void Initialize()
     {
         _middleOfScreen = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-
-        _buttonSingle = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight), _buttonSize, Color.White, 1);
-        _buttonMulti = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonSize.Y + _buttonDistance), _buttonSize, Color.White, 0);
-        _buttonExit = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonSize.Y*2 + _buttonDistance*2), _buttonSize, Color.White, 2);
-        
         base.Initialize();
     }
 
@@ -51,17 +47,26 @@ public class BloomShootMenuProgram : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _font = Content.Load<SpriteFont>("Font1");
+        _buttonFont = Content.Load<SpriteFont>("ButtonFont");
 
-        // TODO: use this.Content to load your game content here
+        _buttonSingle = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight), _buttonSize, Color.White, 1, _buttonFont);
+        _buttonMulti = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonSize.Y + _buttonDistance), _buttonSize, Color.White, 0, _buttonFont);
+        _buttonExit = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X/2, _firstButtonHeight + _buttonSize.Y*2 + _buttonDistance*2), _buttonSize, Color.White, 2, _buttonFont);
+
     }
 
     protected override void Update(GameTime gameTime)
     {
         var KeyboardState = Keyboard.GetState();
+        var mouseState = Mouse.GetState();
         
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+        
+        if (_buttonSingle.WithinBounds(new Vector2(mouseState.X, mouseState.Y))) {}
+        else if (_buttonMulti.WithinBounds(new Vector2(mouseState.X, mouseState.Y))) {}
+        else if (_buttonExit.WithinBounds(new Vector2(mouseState.X, mouseState.Y))) {}
 
         base.Update(gameTime);
 
@@ -73,9 +78,9 @@ public class BloomShootMenuProgram : Game
 
         _spriteBatch.Begin();
         
-        _buttonSingle.Draw(_spriteBatch);
-        _buttonMulti.Draw(_spriteBatch);
-        _buttonExit.Draw(_spriteBatch);
+        _buttonSingle.Draw(_spriteBatch, _buttonFont);
+        _buttonMulti.Draw(_spriteBatch, _buttonFont);
+        _buttonExit.Draw(_spriteBatch, _buttonFont);
         
         _spriteBatch.End();
 
