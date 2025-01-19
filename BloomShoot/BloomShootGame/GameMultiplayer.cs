@@ -19,6 +19,9 @@ public class BloomShootGameProgram : Game
 
     private Client _client;
     private string _password, _ip;
+    
+    private string _connectionStatus = "";
+    private Color _statusColor = Color.White;
 
     public BloomShootGameProgram(string password, string ip)
     {
@@ -69,9 +72,29 @@ public class BloomShootGameProgram : Game
 
         _client.Update();
         
-        if (_client.IsRunning)
+        // Update connection status
+        switch (_client.CurrentState)
         {
-            Console.WriteLine("Client is running.");
+            case Client.ConnectionState.Connecting:
+                _connectionStatus = "Connecting to server...";
+                _statusColor = Color.Yellow;
+                break;
+            case Client.ConnectionState.Connected:
+                _connectionStatus = "Connected!";
+                _statusColor = Color.Green;
+                break;
+            case Client.ConnectionState.Failed:
+                _connectionStatus = $"Connection failed: {_client.LastError}";
+                _statusColor = Color.Red;
+                break;
+            case Client.ConnectionState.Disconnected:
+                _connectionStatus = "Disconnected from server";
+                _statusColor = Color.Red;
+                break;
+        }
+
+        if (_client.CurrentState == Client.ConnectionState.Connected)
+        {
             Vector2 direction = Vector2.Zero;
         
             if (KeyboardState.IsKeyDown(Keys.W)) { direction.Y -= 1; }
@@ -109,8 +132,15 @@ public class BloomShootGameProgram : Game
         }
         else
         {
-            _spriteBatch.DrawString(_font, "Connecting...", new Vector2(_middleOfScreen.X - _font.MeasureString("Connecting...").X / 2 + _middleOfScreen.Y / 2), Color.White);
+            Vector2 statusPos = new Vector2(
+                _middleOfScreen.X - _font.MeasureString(_connectionStatus).X / 2,
+                _middleOfScreen.Y - _font.MeasureString(_connectionStatus).Y / 2
+            );
+            _spriteBatch.DrawString(_font, _connectionStatus, statusPos, _statusColor);
         }
+        
+        
+        
         _spriteBatch.End();
 
         base.Draw(gameTime);
