@@ -18,8 +18,11 @@ public class Client
     {
         client = new NetManager(listener);
         if (!client.Start())
+        {
+            Console.WriteLine("Failed to start client");
             throw new Exception("Failed to start client");
-            
+        }
+
         client.Connect(hostIP, 9050, password);
         
         // Setup event handlers
@@ -28,9 +31,8 @@ public class Client
         {
             Console.WriteLine("Connected to server!");
             serverPeer = peer;
+            isRunning = true;
         };
-        
-        isRunning = true;
     }
     
     public void Update()

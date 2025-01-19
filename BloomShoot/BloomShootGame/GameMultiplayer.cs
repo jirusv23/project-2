@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -27,7 +28,7 @@ public class BloomShootGameProgram : Game
         
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
-        _graphics.IsFullScreen = true;
+        //_graphics.IsFullScreen = true;
         
         _password = password;
         _ip = ip;
@@ -58,20 +59,33 @@ public class BloomShootGameProgram : Game
     protected override void Update(GameTime gameTime)
     {
         var KeyboardState = Keyboard.GetState();
-        
+
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {
+            _client.StopClient();
             Exit();
+        }
 
-        Vector2 direction = Vector2.Zero;
+        _client.Update();
         
-        if (KeyboardState.IsKeyDown(Keys.W)) { direction.Y -= 1; }
-        if (KeyboardState.IsKeyDown(Keys.S)) { direction.Y += 1; }
-        if (KeyboardState.IsKeyDown(Keys.A)) { direction.X -= 1; }
-        if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
+        if (_client.IsRunning)
+        {
+            Console.WriteLine("Client is running.");
+            Vector2 direction = Vector2.Zero;
         
-        _playerLocal.Move(direction);
-
+            if (KeyboardState.IsKeyDown(Keys.W)) { direction.Y -= 1; }
+            if (KeyboardState.IsKeyDown(Keys.S)) { direction.Y += 1; }
+            if (KeyboardState.IsKeyDown(Keys.A)) { direction.X -= 1; }
+            if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
+        
+            _playerLocal.Move(direction);
+        }
+        else
+        {
+            // TODO: connecting text
+        }
+        
         base.Update(gameTime);
 
     }
@@ -81,15 +95,22 @@ public class BloomShootGameProgram : Game
         GraphicsDevice.Clear(Color.Black);
 
         _spriteBatch.Begin();
+
+        if (_client.IsRunning)
+        {
+            _playerLocal.Draw(_spriteBatch);
+            _playerOther.Draw(_spriteBatch);
         
-        _playerLocal.Draw(_spriteBatch);
-        _playerOther.Draw(_spriteBatch);
-        
-        // souřadnice od středu
-        _spriteBatch.DrawString(_font,  (int)(_playerLocal.Position.X - _graphics.PreferredBackBufferWidth/2) + _playerLocal._width/2 + "    " + (int)(_playerLocal.Position.Y - _graphics.PreferredBackBufferHeight / 2 + _playerLocal._height/2), Vector2.Zero, Color.White);
-        // normální souřadnice
-        _spriteBatch.DrawString(_font, $"{(int)_playerLocal.Position.X} | {(int)_playerLocal.Position.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.White);
-        
+            // souřadnice od středu
+            _spriteBatch.DrawString(_font,  (int)(_playerLocal.Position.X - _graphics.PreferredBackBufferWidth/2) + _playerLocal._width/2 + "    " + (int)(_playerLocal.Position.Y - _graphics.PreferredBackBufferHeight / 2 + _playerLocal._height/2), Vector2.Zero, Color.White);
+            // normální souřadnice
+            _spriteBatch.DrawString(_font, $"{(int)_playerLocal.Position.X} | {(int)_playerLocal.Position.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.White);
+
+        }
+        else
+        {
+            _spriteBatch.DrawString(_font, "Connecting...", new Vector2(_middleOfScreen.X - _font.MeasureString("Connecting...").X / 2 + _middleOfScreen.Y / 2), Color.White);
+        }
         _spriteBatch.End();
 
         base.Draw(gameTime);
