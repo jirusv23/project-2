@@ -47,6 +47,7 @@ public class BloomShootGameProgram : Game
         _playerOther = new PlayerOther(GraphicsDevice, _middleOfScreen);
 
         _client = new Client(_password, _ip);
+        _client.OnPlayerStateReceived += OnPlayerStateReceived;
         
         base.Initialize();
     }
@@ -63,8 +64,7 @@ public class BloomShootGameProgram : Game
     {
         var KeyboardState = Keyboard.GetState();
 
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         {
             _client.StopClient();
             Exit();
@@ -103,11 +103,17 @@ public class BloomShootGameProgram : Game
             if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
         
             _playerLocal.Move(direction);
+            
+
+            // Send local player state to server
+            _client.SendPlayerState(
+                _playerLocal.Position.X,
+                _playerLocal.Position.Y,
+                _playerLocal.Rotation,
+                "player1" // You should have a proper player ID system
+            );
         }
-        else
-        {
-            // TODO: connecting text
-        }
+        else { }
         
         base.Update(gameTime);
 
@@ -139,15 +145,24 @@ public class BloomShootGameProgram : Game
             _spriteBatch.DrawString(_font, _connectionStatus, statusPos, _statusColor);
         }
         
-        
-        
         _spriteBatch.End();
 
         base.Draw(gameTime);
     }
 
+    private void OnPlayerStateReceived(PlayerStateMessage state)
+    {
+        // Update other player's position when we receive state from server
+        if (state.PlayerID != _client.OwnID) // Don't update if it's our own state
+        {
+            _playerOther.Position = new Vector2(state.X, state.Y);
+            _playerOther.Rotation = state.Rotation;
+        }
+    }
+
     protected override void UnloadContent()
     {
-        // TODO: zde zavřít klienta pro multiplayer
+        _client?.StopClient();
+        base.UnloadContent();
     }
 }

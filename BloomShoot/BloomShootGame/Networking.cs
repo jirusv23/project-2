@@ -1,8 +1,7 @@
 using System;
-using System.IO;
+using System.Text.Json;
 using LiteNetLib;
 using LiteNetLib.Utils;
-
 
 namespace BloomShootGame;
 
@@ -13,7 +12,13 @@ public class Client
     private bool isRunning = false;
     public bool IsRunning => isRunning;
     private NetPeer serverPeer;
+
+    private string ownID; public string OwnID => ownID;
     
+    // Event handler for receiving player state updates
+    public event Action<PlayerStateMessage> OnPlayerStateReceived;
+
+    // Add connection state tracking
     public enum ConnectionState
     {
         Disconnected,
@@ -77,29 +82,79 @@ public class Client
         }
     }
     
-    public void Update()
+    // Generic method to send any JSON-serializable object
+    public void SendJson<T>(T data)
     {
-        client?.PollEvents();
-    }
-    
-    public void SendMessage(string message)
-    {
-        if (serverPeer != null && serverPeer.ConnectionState == LiteNetLib.ConnectionState.Connected)
-        {
-            NetDataWriter writer = new NetDataWriter();
-            writer.Put(message);
-            serverPeer.Send(writer, DeliveryMethod.ReliableOrdered);
-        }
-        else
+        if (serverPeer == null || serverPeer.ConnectionState != LiteNetLib.ConnectionState.Connected) 
         {
             Console.WriteLine("Cannot send message - not connected to server");
+            return;
         }
+
+        try
+        {
+            string jsonString = JsonSerializer.Serialize(data);
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put(jsonString);
+            serverPeer.Send(writer, DeliveryMethod.ReliableOrdered);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error sending JSON: {ex.Message}");
+        }
+    }
+    
+    // Example method specifically for sending player state
+    public void SendPlayerState(float x, float y, float rotation, string playerId)
+    {
+        var playerState = new PlayerStateMessage
+        {
+            X = x,
+            Y = y,
+            Rotation = rotation,
+            PlayerID = playerId
+        };
+        
+        SendJson(playerState);
     }
     
     private void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
     {
-        Console.WriteLine("We got: {0}", reader.GetString(100));
-        reader.Recycle();
+        try
+        {
+            string jsonString = reader.GetString();
+
+            if (jsonString == "1" || jsonString == "2")
+            {
+                ownID = $"player{jsonString}";
+            }
+            else
+            {
+                var playerState = JsonSerializer.Deserialize<PlayerStateMessage>(jsonString);
+                if (playerState != null)
+                {
+                    OnPlayerStateReceived?.Invoke(playerState);
+                }
+            }
+            
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing received JSON: {ex.Message}");
+        }
+        finally
+        {
+            reader.Recycle();
+        }
+    }
+    
+    public void Update()
+    {
+        if (client != null)
+        {
+            client.PollEvents();
+        }
     }
     
     public void StopClient()
@@ -113,36 +168,10 @@ public class Client
     }
 }
 
-struct NetworkSettings
+public class PlayerStateMessage
 {
-    public string HostIP;
-    public int Port;
-    public bool IsServer;
-    public string Password;
-    
-    public NetworkSettings(string IP, int port, bool isServer, string password)
-    {
-        HostIP = IP;
-        Port = port;
-        IsServer = isServer;
-        Password = password;
-
-        if (!File.Exists("network_settings.txt"))
-        {
-            File.WriteAllText("network_settings.txt", $"{HostIP}\n{Port}\n{Password}\n{IsServer}");
-        }
-        else
-        {
-            string[] lines = File.ReadAllLines("network_settings.txt");
-            HostIP = lines[0];
-            Port = int.Parse(lines[1]);
-            Password = lines[2];
-            Console.Write(lines[3]);
-            if (lines[3] == "true" || lines[3] == "True") isServer = true;
-            else isServer = false;
-        }
-        
-        Console.WriteLine($"Using the following network settings");
-        Console.WriteLine($"Adress: {HostIP}:{Port}"); Console.WriteLine($"Password: {Password}"); Console.WriteLine($"Runs as server: {isServer}");
-    }
+    public float X { get; set; }
+    public float Y { get; set; }
+    public float Rotation { get; set; }
+    public string PlayerID { get; set; }
 }

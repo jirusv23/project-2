@@ -9,6 +9,7 @@ public class PlayerLocal
 {
     private Vector2 _position;
     public Vector2 Position => _position;
+    private float _rotation; public float Rotation => _rotation;
     private Texture2D _texture;
     
     public int _width, _height;
@@ -18,9 +19,9 @@ public class PlayerLocal
     
     public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position)
     {
-
         _width = 30; _height = 30;
         _position = new Vector2(position.X - _width/2, position.Y - _height/2);
+        _rotation = 0f;
         
         _velocity = Vector2.Zero;
         _acceleration = new Vector2(0.1f, 0.1f);

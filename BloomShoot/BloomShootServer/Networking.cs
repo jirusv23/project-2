@@ -41,7 +41,7 @@ public class Server : IDisposable
             List<string> serverReceivedMessagesList = _serverReceivedMessages.ToList();
             serverReceivedMessagesList.Add($"Client connected: {peer.Address}");
             _serverReceivedMessages = serverReceivedMessagesList.ToArray();
-            SendMessageToClient(peer, "Welcome to the server!");
+            SendMessageToClient(peer, $"{server.ConnectedPeersCount}");
         };
 
         listener.NetworkReceiveEvent += OnNetworkReceive;

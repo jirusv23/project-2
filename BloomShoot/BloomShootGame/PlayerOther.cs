@@ -8,14 +8,25 @@ namespace BloomShootGame;
 public class PlayerOther
 {
     private Vector2 _position;
-    public Vector2 Position => _position;
-    
+    public Vector2 Position
+    {
+        get => _position;
+        set => _position = value;
+    }
+
+    private float _rotation; public float Rotation
+    {
+        get => _rotation;
+        set => _rotation = value;
+    }
+
     private List<Bullet> _bullets;
     private Texture2D _texture;
     
     public PlayerOther(GraphicsDevice graphicsDevice, Vector2 position)
     {
         _position = new Vector2();
+        _rotation = 0;
         
         // TODO: vyměnit za texturu
         _texture = new Texture2D(graphicsDevice, 35, 35);
