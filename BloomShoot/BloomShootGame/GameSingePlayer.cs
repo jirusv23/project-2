@@ -1,8 +1,9 @@
-﻿using BloomShootGame;
+using BloomShootGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 
 namespace BloomShootGameSinglePlayer;
@@ -40,9 +41,7 @@ public class BloomShootGameSinglePlayerProgram : Game
         boulderEnemyTexture = Content.Load<Texture2D>("boulder_texture");
         _player = new PlayerLocal(GraphicsDevice, _middleOfScreen);
 
-        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _player.PlayerMovement, new Vector2(_graphics.PreferredBackBufferWidth / 2 - boulderEnemyTexture.Width / 2, _graphics.PreferredBackBufferHeight / 2 - boulderEnemyTexture.Height / 2)));
-        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _player.PlayerMovement, new Vector2(250, 250)));
-        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _player.PlayerMovement, new Vector2(750, 750)));
+        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _player.PlayerMovement, new Vector2(250, 200)));
 
         base.Initialize();
     }
@@ -78,8 +77,6 @@ public class BloomShootGameSinglePlayerProgram : Game
             if (KeyboardState.IsKeyDown(Keys.T)) { boulder.DebugMovement(); };
         }
 
-        if (KeyboardState.IsKeyDown(Keys.M)) { _player.PlayerMovement.X = -5; }
-
         base.Update(gameTime);
     }
 
@@ -93,13 +90,9 @@ public class BloomShootGameSinglePlayerProgram : Game
         foreach (BoulderEnemy boulder in listBouldersEnemies)
         {
             boulder.Draw(_spriteBatch, _player.PlayerMovement);
+            _spriteBatch.DrawString(_font, $"{boulder.viewportPosition.X}      {boulder.viewportPosition.Y}", Vector2.Zero, Color.Red);
         }
-
-        // Debug, writing cordinates
-        _spriteBatch.DrawString(_font, $"Boulder diff: {(int)(_middleOfScreen.X - listBouldersEnemies[0].viewportPosition.X - 58)}      {(int)(_middleOfScreen.Y - listBouldersEnemies[0].viewportPosition.Y - 58)}", Vector2.Zero, Color.Red);
-        _spriteBatch.DrawString(_font, $"Player movement: {(int)(_player.PlayerMovement.X)}      {(int)(_player.PlayerMovement.Y)}", new Vector2(500, 0), Color.Red);
-        _spriteBatch.DrawString(_font, $"Player position: {(int)(_player._position.X - 1920 / 2 + 15)}      {(int)(_player._position.Y)}", new Vector2(1000, 0), Color.Red);
-        _spriteBatch.DrawString(_font, $"Diff {(int)(_middleOfScreen.X - _player._position.X - 15)}   {(int)(_middleOfScreen.Y - _player._position.Y - 15)}", new Vector2(0, 1200), Color.Red);
+        _spriteBatch.DrawString(_font, $"{_player.PlayerMovement.X}      {_player.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
 
         _spriteBatch.End();
         base.Draw(gameTime);
