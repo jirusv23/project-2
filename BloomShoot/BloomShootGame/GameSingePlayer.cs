@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 
 namespace BloomShootGameSinglePlayer;
@@ -14,7 +16,10 @@ public class BloomShootGameSinglePlayerProgram : Game
     private Vector2 _middleOfScreen;
     
     private PlayerLocal _player;
-    
+    private List<BoulderEnemy> listBouldersEnemies = [];
+    private Texture2D boulderEnemyTexture;
+    private SpriteFont _font;
+
     public BloomShootGameSinglePlayerProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -32,7 +37,11 @@ public class BloomShootGameSinglePlayerProgram : Game
     {
         _middleOfScreen = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
 
+        _font = Content.Load<SpriteFont>("font1");
+        boulderEnemyTexture = Content.Load<Texture2D>("boulder_texture");
         _player = new PlayerLocal(GraphicsDevice, _middleOfScreen);
+
+        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _player.PlayerMovement, new Vector2(250, 200)));
 
         base.Initialize();
     }
@@ -63,6 +72,11 @@ public class BloomShootGameSinglePlayerProgram : Game
         
         _player.Move(direction);
 
+        foreach (BoulderEnemy boulder in listBouldersEnemies)
+        {
+            if (KeyboardState.IsKeyDown(Keys.T)) { boulder.DebugMovement(); };
+        }
+
         base.Update(gameTime);
     }
 
@@ -74,8 +88,14 @@ public class BloomShootGameSinglePlayerProgram : Game
         
         _player.Draw(_spriteBatch);
 
+        foreach (BoulderEnemy boulder in listBouldersEnemies)
+        {
+            boulder.Draw(_spriteBatch, _player.PlayerMovement);
+            _spriteBatch.DrawString(_font, $"{boulder.viewportPosition.X}      {boulder.viewportPosition.Y}", Vector2.Zero, Color.Red);
+        }
+        _spriteBatch.DrawString(_font, $"{_player.PlayerMovement.X}      {_player.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
+
         _spriteBatch.End();
-        
         base.Draw(gameTime);
     }
 }

@@ -9,6 +9,8 @@ public class PlayerLocal
 {
     private Vector2 _position;
     public Vector2 Position => _position;
+    public Vector2 PlayerMovement;
+    // PlayerMovement is value by how much the player moved so we can shift every enemy accordíngly, also serves as player coordinate (as long as they spawn on [0, 0]
     private float _rotation; public float Rotation => _rotation;
     private Texture2D _texture;
     
@@ -22,7 +24,8 @@ public class PlayerLocal
         _width = 30; _height = 30;
         _position = new Vector2(position.X - _width/2, position.Y - _height/2);
         _rotation = 0f;
-        
+        PlayerMovement = Vector2.Zero;
+
         _velocity = Vector2.Zero;
         _acceleration = new Vector2(0.1f, 0.1f);
         _deceleration = new Vector2(0.05f, 0.05f);
@@ -63,5 +66,6 @@ public class PlayerLocal
         if (double.Abs(_velocity.Y) < 0.05f) { _velocity.Y = 0; }
         
         _position += _velocity;
+        PlayerMovement += _velocity;
     }
 }
