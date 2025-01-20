@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct3D9;
 
 namespace BloomShootGame
 {
@@ -24,12 +23,12 @@ namespace BloomShootGame
             // PlayerMovement mean how much the player moved so we can shift the position
             _texture = sourceTexture;
             
-            PositionInWorld = new Vector2(SpawnPosition.X - _texture.Width*scalingFactor/2, SpawnPosition.Y - _texture.Height*scalingFactor/2);
+            PositionInWorld = new Vector2(SpawnPosition.X, SpawnPosition.Y);
         }
 
         public void DebugMovement()
         {
-            PositionInWorld.X += 2;
+            PositionInWorld.X += 5;
         }
 
         public void Draw(SpriteBatch _spriteBatch, Vector2 PlayerMovement)

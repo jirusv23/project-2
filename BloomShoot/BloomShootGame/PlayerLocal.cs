@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,7 +8,8 @@ namespace BloomShootGame;
 
 public class PlayerLocal
 {
-    private Vector2 _position;
+    // change _position and _velocity, _acceleration, _deceleration => private (debuging)
+    internal Vector2 _position;
     public Vector2 Position => _position;
     public Vector2 PlayerMovement;
     // PlayerMovement is value by how much the player moved so we can shift every enemy accordíngly, also serves as player coordinate (as long as they spawn on [0, 0]
@@ -16,7 +18,7 @@ public class PlayerLocal
     
     public int _width, _height;
 
-    private Vector2 _velocity, _acceleration, _deceleration;
+    internal Vector2 _velocity, _acceleration, _deceleration;
     private List<Bullet> _bullets;
     
     public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position)
