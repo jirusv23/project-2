@@ -20,6 +20,8 @@ public class BloomShootGameSinglePlayerProgram : Game
     private Texture2D boulderEnemyTexture;
     private SpriteFont _font;
 
+    private Texture2D[] BackgroundTextureList;
+    private BackgroundManager BackgroundManager;
     public BloomShootGameSinglePlayerProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -43,7 +45,7 @@ public class BloomShootGameSinglePlayerProgram : Game
         // Camera follows this player
         _mainPlayer = new PlayerLocal(GraphicsDevice, _middleOfScreen);
 
-        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _mainPlayer.PlayerMovement, new Vector2(250, 200)));
+        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _mainPlayer.PlayerMovement, new Vector2(_graphics.PreferredBackBufferWidth/2, _graphics.PreferredBackBufferHeight / 2)));
 
         base.Initialize();
     }
@@ -51,6 +53,13 @@ public class BloomShootGameSinglePlayerProgram : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+
+        BackgroundTextureList = [
+            Content.Load<Texture2D>("space_background")
+        ]; 
+        
+        BackgroundManager = new BackgroundManager(_spriteBatch, BackgroundTextureList, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
     }
 
     protected override void Update(GameTime gameTime)
@@ -87,7 +96,8 @@ public class BloomShootGameSinglePlayerProgram : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
-        
+        BackgroundManager.Draw(_mainPlayer.PlayerMovement);
+
         _mainPlayer.Draw(_spriteBatch);
 
         foreach (BoulderEnemy boulder in listBouldersEnemies)

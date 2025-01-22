@@ -13,9 +13,13 @@
     </PropertyGroup>
     <ItemGroup>
       <None Remove="Content\player.png" />
+      <None Remove="Content\space_background.png" />
     </ItemGroup>
     <ItemGroup>
       <Content Include="Content\player.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Content\space_background.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
