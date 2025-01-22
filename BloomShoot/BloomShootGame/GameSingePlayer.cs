@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -28,6 +29,7 @@ public class BloomShootGameSinglePlayerProgram : Game
     private Border[] listBorder;
     private int borderEdgeDistance = 4;
     private int borderThickness = 3;
+    private Color borderColor = Color.Red;
 
     private Vector2Visualizer visuliazer;
     // border is left from left top corder by -(windowWidth/borderEdgeDistance)
@@ -64,13 +66,14 @@ public class BloomShootGameSinglePlayerProgram : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        borderColor = new Color(41, 0, 148, 125);
         listBorder =
         [
             // In order: left[0], right[1], top[2], down[3]
-            new Border(GraphicsDevice,new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),Color.Red,_graphics.PreferredBackBufferHeight + (2*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
-            new Border(GraphicsDevice,new Vector2(_graphics.PreferredBackBufferWidth + _graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),Color.Red,_graphics.PreferredBackBufferHeight + (2*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
-            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance), Color.Red, borderThickness, _graphics.PreferredBackBufferWidth + (2*_graphics.PreferredBackBufferWidth)/borderEdgeDistance),
-            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,_graphics.PreferredBackBufferHeight + _graphics.PreferredBackBufferHeight/borderEdgeDistance), Color.Red, borderThickness, _graphics.PreferredBackBufferWidth + (2*_graphics.PreferredBackBufferWidth)/borderEdgeDistance)
+            new Border(GraphicsDevice,new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),borderColor ,_graphics.PreferredBackBufferHeight + (2*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
+            new Border(GraphicsDevice,new Vector2(_graphics.PreferredBackBufferWidth + _graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),borderColor ,_graphics.PreferredBackBufferHeight + (2*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance), borderColor , borderThickness, _graphics.PreferredBackBufferWidth + (2*_graphics.PreferredBackBufferWidth)/borderEdgeDistance),
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,_graphics.PreferredBackBufferHeight + _graphics.PreferredBackBufferHeight/borderEdgeDistance), borderColor , borderThickness, _graphics.PreferredBackBufferWidth + (2*_graphics.PreferredBackBufferWidth)/borderEdgeDistance)
         ];
 
         BackgroundTextureList = [
