@@ -1,2 +1,0 @@
-Currently the camera follow the player only partially due to players 'smooth' movement
--> need to adjust camera if the player isn't in the middle

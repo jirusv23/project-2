@@ -11,8 +11,10 @@ public class PlayerLocal
     // change _position and _velocity, _acceleration, _deceleration => private (debuging)
     internal Vector2 _position;
     public Vector2 Position => _position;
-    public Vector2 PlayerMovement;
     // PlayerMovement is value by how much the player moved so we can shift every enemy accordíngly, also serves as player coordinate (as long as they spawn on [0, 0]
+    public Vector2 PlayerMovement;
+    public Rectangle playerRectangle;
+
     private float _rotation; public float Rotation => _rotation;
     private Texture2D _texture;
     
@@ -31,7 +33,9 @@ public class PlayerLocal
         _velocity = Vector2.Zero;
         _acceleration = new Vector2(0.1f, 0.1f);
         _deceleration = new Vector2(0.05f, 0.05f);
-        
+
+        playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
+
         // TODO: vyměnit za texturu
         _texture = new Texture2D(graphicsDevice, 35, 35);
         Color[] colors = new Color[35 * 35];
@@ -68,6 +72,11 @@ public class PlayerLocal
         if (double.Abs(_velocity.Y) < 0.05f) { _velocity.Y = 0; }
         
         _position += _velocity;
+    }
+
+    public void Update()
+    {
         PlayerMovement += _velocity;
+        playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
     }
 }

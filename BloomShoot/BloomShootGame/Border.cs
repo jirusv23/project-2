@@ -7,6 +7,7 @@ namespace BloomShootGame
     {
         private int height;
         private int width;
+        public Rectangle borderRectangle;
 
         public Vector2 PositionInWorld;
         public Vector2 PositionInViewport;
@@ -19,7 +20,7 @@ namespace BloomShootGame
             this.PositionInWorld = positionInWorld;
             this.width = width;
             this.height = height;
-
+            borderRectangle = new Rectangle((int)PositionInViewport.X, (int)PositionInViewport.Y, width, height);
 
             _texture = new Texture2D(graphicsDevice, width, height);
             Color[] colors = new Color[width * height];
@@ -35,13 +36,19 @@ namespace BloomShootGame
             _texture.SetData(colors);
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 PlayerMovement)
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_texture, PositionInViewport, Color.White);
+        }
+
+        public void Update(Vector2 PlayerMovement)
         {
             // Shifts the player by the playerMovement, gives sense of moving
             PositionInViewport = new Vector2(PositionInWorld.X - PlayerMovement.X,
                                              PositionInWorld.Y - PlayerMovement.Y);
 
-            spriteBatch.Draw(_texture, PositionInViewport, Color.White);
+            borderRectangle.X = (int)PositionInViewport.X;
+            borderRectangle.Y = (int)PositionInViewport.Y;
         }
     }
 }

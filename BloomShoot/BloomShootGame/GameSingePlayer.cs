@@ -24,6 +24,9 @@ public class BloomShootGameSinglePlayerProgram : Game
     private BackgroundManager BackgroundManager;
 
     private Border[] listBorder;
+    private int borderEdgeDistance = 4;
+    private int borderThickness = 3;
+    // border is left from left top corder by -(windowWidth/borderEdgeDistance)
     public BloomShootGameSinglePlayerProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -58,10 +61,11 @@ public class BloomShootGameSinglePlayerProgram : Game
 
         listBorder = 
         [
-            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/4, -_graphics.PreferredBackBufferHeight/4), Color.Red, _graphics.PreferredBackBufferHeight, 2),
-            new Border(GraphicsDevice, new Vector2(60, 30), Color.Red, 900, 2),
-            new Border(GraphicsDevice, new Vector2(90, 30), Color.Red, 900, 2),
-            new Border(GraphicsDevice, new Vector2(120, 30), Color.Red, 900, 2)
+            // In order: left, right, top, down
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance), Color.Red, _graphics.PreferredBackBufferHeight + (borderThickness*_graphics.PreferredBackBufferHeight)/borderEdgeDistance, borderThickness),
+            new Border(GraphicsDevice, new Vector2(_graphics.PreferredBackBufferWidth + _graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),Color.Red,_graphics.PreferredBackBufferHeight + (borderThickness*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance), Color.Red,borderThickness,_graphics.PreferredBackBufferWidth + (borderThickness*_graphics.PreferredBackBufferWidth)/borderEdgeDistance),
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,_graphics.PreferredBackBufferHeight + _graphics.PreferredBackBufferHeight/borderEdgeDistance),Color.Red,borderThickness,_graphics.PreferredBackBufferWidth + (borderThickness*_graphics.PreferredBackBufferWidth)/borderEdgeDistance)
         ];
 
         BackgroundTextureList = [
@@ -108,18 +112,33 @@ public class BloomShootGameSinglePlayerProgram : Game
         BackgroundManager.Draw(_mainPlayer.PlayerMovement);
 
         _mainPlayer.Draw(_spriteBatch);
+        _mainPlayer.Update();
 
         foreach (BoulderEnemy boulder in listBouldersEnemies)
         {
             boulder.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
-            _spriteBatch.DrawString(_font, $"{boulder.viewportPosition.X}      {boulder.viewportPosition.Y}", Vector2.Zero, Color.Red);
         }
-        _spriteBatch.DrawString(_font, $"{_mainPlayer.PlayerMovement.X}      {_mainPlayer.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
+
+        //_spriteBatch.DrawString(_font, $"{_mainPlayer.PlayerMovement.X}           {_mainPlayer.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
 
         foreach (Border border in listBorder)
         {
-            border.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
+            border.Draw(_spriteBatch);
+            border.Update(_mainPlayer.PlayerMovement);
+
+            if (border.borderRectangle.Intersects(_mainPlayer.playerRectangle))
+            {
+                Debug.WriteLine("DD");
+            }
         }
+
+        if (listBorder[0].borderRectangle.Intersects(_mainPlayer.playerRectangle))
+        {
+            Debug.Write("dsasad");
+        }
+
+        _spriteBatch.DrawString(_font, $"PlayerRectangle X:{(int)_mainPlayer.playerRectangle.X}   Y:{(int)_mainPlayer.playerRectangle.Y}   Width:{(int)_mainPlayer.playerRectangle.Width}   Height:{(int)_mainPlayer.playerRectangle.Height}   ", new Vector2(0, 0), Color.Red);
+        _spriteBatch.DrawString(_font, $"Border[0] X:{(int)listBorder[0].borderRectangle.X}   Y:{(int)listBorder[0].borderRectangle.Y}   Width:{(int)listBorder[0].borderRectangle.Width}   Height:{(int)listBorder[0].borderRectangle.Height}   ", new Vector2(0, 50), Color.Red);
 
         _spriteBatch.End();
         base.Draw(gameTime);
