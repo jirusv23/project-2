@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 
 namespace BloomShootGame;
@@ -17,18 +16,18 @@ public class PlayerLocal
 
     private float _rotation; public float Rotation => _rotation;
     private Texture2D _texture;
-    
+
     public int _width, _height;
 
     internal Vector2 _velocity, _acceleration, _deceleration;
     private List<Bullet> _bullets;
-    
+
     public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position)
     {
         _width = 30; _height = 30;
-        _position = new Vector2(position.X - _width/2, position.Y - _height/2);
-        _rotation = 0f;
         PlayerMovement = Vector2.Zero;
+        _position = new Vector2(position.X - _width / 2, position.Y - _height / 2);
+        _rotation = 0f;
 
         _velocity = Vector2.Zero;
         _acceleration = new Vector2(0.1f, 0.1f);
@@ -37,17 +36,17 @@ public class PlayerLocal
         playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
 
         // TODO: vyměnit za texturu
-        _texture = new Texture2D(graphicsDevice, 35, 35);
-        Color[] colors = new Color[35 * 35];
+        _texture = new Texture2D(graphicsDevice, _width, _height);
+        Color[] colors = new Color[_height * _width];
 
-        for (int i = 0; i < 35; i++)
+        for (int i = 0; i < _width; i++)
         {
-            for (int j = 0; j < 35; j++)
+            for (int j = 0; j < _height; j++)
             {
-                colors[i + j * 35] = Color.Red;
+                colors[i + j * _width] = Color.Red;
             }
         }
-        
+
         _texture.SetData(colors);
     }
 
@@ -58,20 +57,26 @@ public class PlayerLocal
 
     public void Move(Vector2 direction)
     {
-        _velocity += _acceleration*direction;
-        
+        _velocity += _acceleration * direction;
+
         if (_velocity.X > 3) _velocity.X = 3;
         if (_velocity.Y > 3) _velocity.Y = 3;
 
-        if (_velocity.X > 0) { _velocity.X -= _deceleration.X; }
-        else if (_velocity.X < 0) { _velocity.X += _deceleration.X; }
-        if (_velocity.Y > 0) { _velocity.Y -= _deceleration.Y; }
-        else if (_velocity.Y < 0) { _velocity.Y += _deceleration.Y; }
-        
-        if (double.Abs(_velocity.X) < 0.05f) { _velocity.X = 0; }
-        if (double.Abs(_velocity.Y) < 0.05f) { _velocity.Y = 0; }
-        
-        _position += _velocity;
+        if (_velocity.X > 0) 
+            { _velocity.X -= _deceleration.X; }
+        else if (_velocity.X < 0) 
+            { _velocity.X += _deceleration.X; }
+        if (_velocity.Y > 0) 
+            { _velocity.Y -= _deceleration.Y; }
+        else if (_velocity.Y < 0) 
+            { _velocity.Y += _deceleration.Y; }
+
+        if (double.Abs(_velocity.X) < 0.05f) 
+            { _velocity.X = 0; }
+        if (double.Abs(_velocity.Y) < 0.05f) 
+            { _velocity.Y = 0; }
+
+        //_position += _velocity;
     }
 
     public void Update()

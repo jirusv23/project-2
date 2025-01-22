@@ -25,12 +25,6 @@ namespace BloomShootGame
             
             PositionInWorld = new Vector2(SpawnPosition.X, SpawnPosition.Y);
         }
-
-        public void DebugMovement()
-        {
-            PositionInWorld.X += 5;
-        }
-
         public void Draw(SpriteBatch _spriteBatch, Vector2 PlayerMovement)
         {
             // Draws the player and updates the viewportPosition to math it with PlayerMovement
