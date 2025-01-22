@@ -22,6 +22,8 @@ public class BloomShootGameSinglePlayerProgram : Game
 
     private Texture2D[] BackgroundTextureList;
     private BackgroundManager BackgroundManager;
+
+    private Border[] listBorder;
     public BloomShootGameSinglePlayerProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -54,6 +56,13 @@ public class BloomShootGameSinglePlayerProgram : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        listBorder = 
+        [
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/4, -_graphics.PreferredBackBufferHeight/4), Color.Red, _graphics.PreferredBackBufferHeight, 2),
+            new Border(GraphicsDevice, new Vector2(60, 30), Color.Red, 900, 2),
+            new Border(GraphicsDevice, new Vector2(90, 30), Color.Red, 900, 2),
+            new Border(GraphicsDevice, new Vector2(120, 30), Color.Red, 900, 2)
+        ];
 
         BackgroundTextureList = [
             Content.Load<Texture2D>("space_background")
@@ -106,6 +115,11 @@ public class BloomShootGameSinglePlayerProgram : Game
             _spriteBatch.DrawString(_font, $"{boulder.viewportPosition.X}      {boulder.viewportPosition.Y}", Vector2.Zero, Color.Red);
         }
         _spriteBatch.DrawString(_font, $"{_mainPlayer.PlayerMovement.X}      {_mainPlayer.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
+
+        foreach (Border border in listBorder)
+        {
+            border.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
+        }
 
         _spriteBatch.End();
         base.Draw(gameTime);
