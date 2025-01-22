@@ -124,7 +124,7 @@ public class Client
         {
             string jsonString = reader.GetString();
 
-            if (jsonString == "1" || jsonString == "2")
+            if (jsonString is "1" or "2")
             {
                 ownID = $"player{jsonString}";
             }

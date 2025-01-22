@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -74,11 +75,12 @@ public class Game1 : Game
             Vector2 size = _fontBig.MeasureString("Server runs!");
             _spriteBatch.DrawString(_fontBig, "Server runs!", new Vector2(_middleOfScreen.X - size.X/2, _middleOfScreen.Y - size.Y/2 - 200), Color.Black);
             
-            for (int i = 0; i < _server.ServerReceivedMessages.Length; i++)
+            for (int i = _server.ServerReceivedMessages.Length - 1; i >= 0; i--)
             {
-                Console.WriteLine($"{_server.ServerReceivedMessages[i]}");
+                //Console.WriteLine($"{_server.ServerReceivedMessages[i]}");
                 _spriteBatch.DrawString(_fontSmol, _server.ServerReceivedMessages[i], new Vector2(75, 150 + i*15), Color.Black);
             }
+            if (_server.ServerReceivedMessages.Length > 0) _spriteBatch.DrawString(_fontBig, _server.ServerReceivedMessages.Last(), new Vector2(65, 75), Color.Black);
         }
         
         _spriteBatch.End();
