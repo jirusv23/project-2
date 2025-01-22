@@ -15,7 +15,7 @@ public class BloomShootGameSinglePlayerProgram : Game
 
     private Vector2 _middleOfScreen;
     
-    private PlayerLocal _player;
+    private PlayerLocal _mainPlayer;
     private List<BoulderEnemy> listBouldersEnemies = [];
     private Texture2D boulderEnemyTexture;
     private SpriteFont _font;
@@ -39,9 +39,11 @@ public class BloomShootGameSinglePlayerProgram : Game
 
         _font = Content.Load<SpriteFont>("font1");
         boulderEnemyTexture = Content.Load<Texture2D>("boulder_texture");
-        _player = new PlayerLocal(GraphicsDevice, _middleOfScreen);
 
-        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _player.PlayerMovement, new Vector2(250, 200)));
+        // Camera follows this player
+        _mainPlayer = new PlayerLocal(GraphicsDevice, _middleOfScreen);
+
+        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _mainPlayer.PlayerMovement, new Vector2(250, 200)));
 
         base.Initialize();
     }
@@ -70,7 +72,7 @@ public class BloomShootGameSinglePlayerProgram : Game
         if (KeyboardState.IsKeyDown(Keys.A)) { direction.X -= 1; }
         if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
         
-        _player.Move(direction);
+        _mainPlayer.Move(direction);
 
         foreach (BoulderEnemy boulder in listBouldersEnemies)
         {
@@ -86,14 +88,14 @@ public class BloomShootGameSinglePlayerProgram : Game
 
         _spriteBatch.Begin();
         
-        _player.Draw(_spriteBatch);
+        _mainPlayer.Draw(_spriteBatch);
 
         foreach (BoulderEnemy boulder in listBouldersEnemies)
         {
-            boulder.Draw(_spriteBatch, _player.PlayerMovement);
+            boulder.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
             _spriteBatch.DrawString(_font, $"{boulder.viewportPosition.X}      {boulder.viewportPosition.Y}", Vector2.Zero, Color.Red);
         }
-        _spriteBatch.DrawString(_font, $"{_player.PlayerMovement.X}      {_player.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
+        _spriteBatch.DrawString(_font, $"{_mainPlayer.PlayerMovement.X}      {_mainPlayer.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
 
         _spriteBatch.End();
         base.Draw(gameTime);
