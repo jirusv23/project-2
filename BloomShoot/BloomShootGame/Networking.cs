@@ -1,8 +1,7 @@
 using System;
-using System.IO;
+using System.Text.Json;
 using LiteNetLib;
 using LiteNetLib.Utils;
-
 
 namespace BloomShootGame;
 
@@ -11,92 +10,168 @@ public class Client
     private EventBasedNetListener listener = new EventBasedNetListener();
     private NetManager client;
     private bool isRunning = false;
+    public bool IsRunning => isRunning;
     private NetPeer serverPeer;
+
+    private string ownID; public string OwnID => ownID;
+    
+    // Event handler for receiving player state updates
+    public event Action<PlayerStateMessage> OnPlayerStateReceived;
+
+    // Add connection state tracking
+    public enum ConnectionState
+    {
+        Disconnected,
+        Connecting,
+        Connected,
+        Failed
+    }
+    
+    private ConnectionState _connectionState = ConnectionState.Disconnected;
+    public ConnectionState CurrentState => _connectionState;
+    public string LastError { get; private set; } = "";
     
     public Client(string password, string hostIP)
     {
-        client = new NetManager(listener);
-        if (!client.Start())
-            throw new Exception("Failed to start client");
-            
-        client.Connect(hostIP, 9050, password);
-        
-        // Setup event handlers
-        listener.NetworkReceiveEvent += OnNetworkReceive;
-        listener.PeerConnectedEvent += peer =>
+        try
         {
-            Console.WriteLine("Connected to server!");
-            serverPeer = peer;
+            client = new NetManager(listener);
+            if (!client.Start())
+            {
+                _connectionState = ConnectionState.Failed;
+                LastError = "Failed to start client";
+                throw new Exception(LastError);
+            }
+
+            _connectionState = ConnectionState.Connecting;
+            Console.WriteLine($"Attempting connection to IP: {hostIP} with password: {password}");
+            
+            client.Connect(hostIP, 9050, password);
+            
+            // Setup event handlers
+            listener.NetworkReceiveEvent += OnNetworkReceive;
+            
+            listener.PeerConnectedEvent += peer =>
+            {
+                Console.WriteLine("Connected to server!");
+                serverPeer = peer;
+                isRunning = true;
+                _connectionState = ConnectionState.Connected;
+            };
+            
+            listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
+            {
+                Console.WriteLine($"Disconnected from server: {disconnectInfo.Reason}");
+                isRunning = false;
+                _connectionState = ConnectionState.Disconnected;
+                LastError = disconnectInfo.Reason.ToString();
+            };
+            
+            listener.NetworkErrorEvent += (endPoint, error) =>
+            {
+                Console.WriteLine($"Network error: {error}");
+                _connectionState = ConnectionState.Failed;
+                LastError = error.ToString();
+            };
+        }
+        catch (Exception ex)
+        {
+            _connectionState = ConnectionState.Failed;
+            LastError = ex.Message;
+            throw;
+        }
+    }
+    
+    // Generic method to send any JSON-serializable object
+    public void SendJson<T>(T data)
+    {
+        if (serverPeer == null || serverPeer.ConnectionState != LiteNetLib.ConnectionState.Connected) 
+        {
+            Console.WriteLine("Cannot send message - not connected to server");
+            return;
+        }
+
+        try
+        {
+            string jsonString = JsonSerializer.Serialize(data);
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put(jsonString);
+            serverPeer.Send(writer, DeliveryMethod.ReliableOrdered);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error sending JSON: {ex.Message}");
+        }
+    }
+    
+    // Example method specifically for sending player state
+    public void SendPlayerState(float x, float y, float rotation, string playerId)
+    {
+        var playerState = new PlayerStateMessage
+        {
+            X = x,
+            Y = y,
+            Rotation = rotation,
+            PlayerID = playerId
         };
         
-        isRunning = true;
+        SendJson(playerState);
+    }
+    
+    private void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
+    {
+        try
+        {
+            string jsonString = reader.GetString();
+
+            if (jsonString == "1" || jsonString == "2")
+            {
+                ownID = $"player{jsonString}";
+            }
+            else
+            {
+                var playerState = JsonSerializer.Deserialize<PlayerStateMessage>(jsonString);
+                if (playerState != null)
+                {
+                    OnPlayerStateReceived?.Invoke(playerState);
+                }
+            }
+            
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing received JSON: {ex.Message}");
+        }
+        finally
+        {
+            reader.Recycle();
+        }
     }
     
     public void Update()
     {
-        if (isRunning)
+        if (client != null)
         {
             client.PollEvents();
         }
     }
     
-    public void SendMessage(string message)
-    {
-        if (serverPeer != null && serverPeer.ConnectionState == ConnectionState.Connected)
-        {
-            NetDataWriter writer = new NetDataWriter();
-            writer.Put(message);
-            serverPeer.Send(writer, DeliveryMethod.ReliableOrdered);
-        }
-        else
-        {
-            Console.WriteLine("Cannot send message - not connected to server");
-        }
-    }
-    
-    private void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
-    {
-        Console.WriteLine("We got: {0}", reader.GetString(100));
-        reader.Recycle();
-    }
-    
     public void StopClient()
     {
         isRunning = false;
-        client.Stop();
+        if (client != null)
+        {
+            client.Stop();
+            _connectionState = ConnectionState.Disconnected;
+        }
     }
 }
 
-struct NetworkSettings
+public class PlayerStateMessage
 {
-    public string HostIP;
-    public int Port;
-    public bool IsServer;
-    public string Password;
-    
-    public NetworkSettings(string IP, int port, bool isServer, string password)
-    {
-        HostIP = IP;
-        Port = port;
-        IsServer = isServer;
-        Password = password;
-
-        if (!File.Exists("network_settings.txt"))
-        {
-            File.WriteAllText("network_settings.txt", $"{HostIP}\n{Port}\n{Password}\n{IsServer}");
-        }
-        else
-        {
-            string[] lines = File.ReadAllLines("network_settings.txt");
-            HostIP = lines[0];
-            Port = int.Parse(lines[1]);
-            Password = lines[2];
-            Console.Write(lines[3]);
-            if (lines[3] == "true" || lines[3] == "True") isServer = true;
-            else isServer = false;
-        }
-        
-        Console.WriteLine($"Using the following network settings");
-        Console.WriteLine($"Adress: {HostIP}:{Port}"); Console.WriteLine($"Password: {Password}"); Console.WriteLine($"Runs as server: {isServer}");
-    }
+    public float X { get; set; }
+    public float Y { get; set; }
+    public float Rotation { get; set; }
+    public string PlayerID { get; set; }
 }

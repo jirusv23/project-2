@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -13,9 +15,14 @@ public class Server : IDisposable
     private bool isRunning = false;
     private bool isDisposed = false;
     private int port;
+    
+    private string[] _serverReceivedMessages;
+    public string[] ServerReceivedMessages => _serverReceivedMessages;
 
     public Server(string password, int port)
     {
+        _serverReceivedMessages = [];
+        
         server = new NetManager(listener);
         if (!server.Start(port))
             throw new Exception("Failed to start server");
@@ -31,7 +38,10 @@ public class Server : IDisposable
         listener.PeerConnectedEvent += peer =>
         {
             Console.WriteLine($"Client connected: {peer.Address}");
-            SendMessageToClient(peer, "Welcome to the server!");
+            List<string> serverReceivedMessagesList = _serverReceivedMessages.ToList();
+            serverReceivedMessagesList.Add($"Client connected: {peer.Address}");
+            _serverReceivedMessages = serverReceivedMessagesList.ToArray();
+            SendMessageToClient(peer, $"{server.ConnectedPeersCount}");
         };
 
         listener.NetworkReceiveEvent += OnNetworkReceive;
@@ -41,7 +51,7 @@ public class Server : IDisposable
 
     public void SendMessageToClient(NetPeer peer, string message)
     {
-        if (peer.ConnectionState == ConnectionState.Connected)  // TODO: .Connected nenalezeno??
+        if (peer.ConnectionState == ConnectionState.Connected)
         {
             NetDataWriter writer = new NetDataWriter();
             writer.Put(message);
@@ -61,10 +71,17 @@ public class Server : IDisposable
         try
         {
             string message = reader.GetString();
-            Console.WriteLine($"Server received from {peer.Address}: {message}");
-            
-            // Echo the message back to all clients
-            BroadcastMessage($"Client {peer.Address} says: {message}");
+            if (message != "")
+            {
+                Console.WriteLine($"Server received from {peer.Address}: {message}");
+
+                List<string> serverReceivedMessagesList = _serverReceivedMessages.ToList();
+                serverReceivedMessagesList.Add(message);
+                _serverReceivedMessages = serverReceivedMessagesList.ToArray();
+
+                // Echo the message back to all clients
+                BroadcastMessage($"Client {peer.Address} says: {message}");
+            }
         }
         finally
         {
