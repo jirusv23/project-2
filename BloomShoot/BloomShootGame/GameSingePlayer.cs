@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 
 namespace BloomShootGameSinglePlayer;
@@ -64,11 +66,11 @@ public class BloomShootGameSinglePlayerProgram : Game
 
         listBorder =
         [
-            // In order: left, right, top, down
-            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance), Color.Red, _graphics.PreferredBackBufferHeight + (borderThickness*_graphics.PreferredBackBufferHeight)/borderEdgeDistance, borderThickness),
-            new Border(GraphicsDevice, new Vector2(_graphics.PreferredBackBufferWidth + _graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),Color.Red,_graphics.PreferredBackBufferHeight + (borderThickness*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
-            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance), Color.Red,borderThickness,_graphics.PreferredBackBufferWidth + (borderThickness*_graphics.PreferredBackBufferWidth)/borderEdgeDistance),
-            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,_graphics.PreferredBackBufferHeight + _graphics.PreferredBackBufferHeight/borderEdgeDistance),Color.Red,borderThickness,_graphics.PreferredBackBufferWidth + (borderThickness*_graphics.PreferredBackBufferWidth)/borderEdgeDistance)
+            // In order: left[0], right[1], top[2], down[3]
+            new Border(GraphicsDevice,new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),Color.Red,_graphics.PreferredBackBufferHeight + (2*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
+            new Border(GraphicsDevice,new Vector2(_graphics.PreferredBackBufferWidth + _graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),Color.Red,_graphics.PreferredBackBufferHeight + (2*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance), Color.Red, borderThickness, _graphics.PreferredBackBufferWidth + (2*_graphics.PreferredBackBufferWidth)/borderEdgeDistance),
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,_graphics.PreferredBackBufferHeight + _graphics.PreferredBackBufferHeight/borderEdgeDistance), Color.Red, borderThickness, _graphics.PreferredBackBufferWidth + (2*_graphics.PreferredBackBufferWidth)/borderEdgeDistance)
         ];
 
         BackgroundTextureList = [
@@ -114,30 +116,37 @@ public class BloomShootGameSinglePlayerProgram : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
+
+        // Draws background
         BackgroundManager.Draw(_mainPlayer.PlayerMovement);
 
+        // Handles character
         _mainPlayer.Draw(_spriteBatch);
         _mainPlayer.Update();
 
+
+        // Handles border enemy
         foreach (BoulderEnemy boulder in listBouldersEnemies)
         {
             boulder.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
         }
 
-        foreach (Border border in listBorder)
-        {
-            border.Draw(_spriteBatch);
-            border.Update(_mainPlayer.PlayerMovement);
 
-            if (border.borderRectangle.Intersects(_mainPlayer.playerRectangle))
+        // Handles border
+        for (int i = 0; i < listBorder.Length; i++)
+        {
+            listBorder[i].Draw(_spriteBatch);
+            listBorder[i].Update(_mainPlayer.PlayerMovement);
+
+            // Checks collision with every border and adjust the player _velocity accordingly
+            if (listBorder[i].borderRectangle.Intersects(_mainPlayer.playerRectangle))
             {
-                Debug.WriteLine("DD");
+                _mainPlayer.HitAWall(i, listBorder[i].borderRectangle);
             }
         }
 
-
+        // Debug
         visuliazer.DrawVector(_spriteBatch, _mainPlayer._velocity*10);
-
 
         _spriteBatch.End();
         base.Draw(gameTime);

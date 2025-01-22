@@ -59,8 +59,10 @@ public class PlayerLocal
     {
         _velocity += _acceleration * direction;
 
-        if (_velocity.X > 3) _velocity.X = 3;
-        if (_velocity.Y > 3) _velocity.Y = 3;
+        if (_velocity.X > 10) _velocity.X = 10;
+        if (_velocity.X < -10) _velocity.X = -10;
+        if (_velocity.Y > 10) _velocity.Y = 10;
+        if (_velocity.Y < -10) _velocity.Y = -10;
 
         if (_velocity.X > 0) 
             { _velocity.X -= _deceleration.X; }
@@ -83,5 +85,42 @@ public class PlayerLocal
     {
         PlayerMovement += _velocity;
         playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
+    }
+
+    public void HitAWall(int direction, Rectangle borderRect)
+    {
+        // direction: 0 left, 1 right, 2 top, 3 down
+        float velocityDecreaseMultiplier = 0.8f;
+
+        if (direction == 0)  // left 
+            {
+            PlayerMovement.X += 1;
+            // makes sure the player can't shift throught at low speed
+            _velocity.X *= -1;
+            // flips the velocity
+            _velocity *= velocityDecreaseMultiplier;
+            // decreases speed
+            }
+        else if (direction == 1) //right
+        {
+            PlayerMovement.X += -1;
+            _velocity.X *= -1;
+            _velocity *= velocityDecreaseMultiplier;
+        }
+
+        if (direction == 2)  // top 
+        {
+            PlayerMovement.Y += 1;
+            _velocity.Y *= -1;
+            _velocity *= velocityDecreaseMultiplier;
+        }
+        else if (direction == 3) //down
+        {
+            PlayerMovement.Y += -1;
+            _velocity.Y *= -1;
+            _velocity *= velocityDecreaseMultiplier;
+        }
+
+
     }
 }
