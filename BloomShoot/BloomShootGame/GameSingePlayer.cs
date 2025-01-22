@@ -14,12 +14,16 @@ public class BloomShootGameSinglePlayerProgram : Game
     private SpriteBatch _spriteBatch;
 
     private Vector2 _middleOfScreen;
-
-    private PlayerLocal _player;
+    
+    private PlayerLocal _mainPlayer;
     private List<BoulderEnemy> listBouldersEnemies = [];
     private Texture2D boulderEnemyTexture;
     private SpriteFont _font;
 
+    private Texture2D[] BackgroundTextureList;
+    private BackgroundManager BackgroundManager;
+
+    private Border[] listBorder;
     public BloomShootGameSinglePlayerProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -39,9 +43,11 @@ public class BloomShootGameSinglePlayerProgram : Game
 
         _font = Content.Load<SpriteFont>("font1");
         boulderEnemyTexture = Content.Load<Texture2D>("boulder_texture");
-        _player = new PlayerLocal(GraphicsDevice, _middleOfScreen);
 
-        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _player.PlayerMovement, new Vector2(250, 200)));
+        // Camera follows this player
+        _mainPlayer = new PlayerLocal(GraphicsDevice, _middleOfScreen);
+
+        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _mainPlayer.PlayerMovement, new Vector2(_graphics.PreferredBackBufferWidth/2, _graphics.PreferredBackBufferHeight / 2)));
 
         base.Initialize();
     }
@@ -49,6 +55,20 @@ public class BloomShootGameSinglePlayerProgram : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        listBorder = 
+        [
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/4, -_graphics.PreferredBackBufferHeight/4), Color.Red, _graphics.PreferredBackBufferHeight, 2),
+            new Border(GraphicsDevice, new Vector2(60, 30), Color.Red, 900, 2),
+            new Border(GraphicsDevice, new Vector2(90, 30), Color.Red, 900, 2),
+            new Border(GraphicsDevice, new Vector2(120, 30), Color.Red, 900, 2)
+        ];
+
+        BackgroundTextureList = [
+            Content.Load<Texture2D>("space_background")
+        ]; 
+        
+        BackgroundManager = new BackgroundManager(_spriteBatch, BackgroundTextureList, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
     }
 
     protected override void Update(GameTime gameTime)
@@ -69,8 +89,8 @@ public class BloomShootGameSinglePlayerProgram : Game
         if (KeyboardState.IsKeyDown(Keys.S)) { direction.Y += 1; }
         if (KeyboardState.IsKeyDown(Keys.A)) { direction.X -= 1; }
         if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
-
-        _player.Move(direction);
+        
+        _mainPlayer.Move(direction);
 
         foreach (BoulderEnemy boulder in listBouldersEnemies)
         {
@@ -85,14 +105,21 @@ public class BloomShootGameSinglePlayerProgram : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
-        _player.Draw(_spriteBatch);
+        BackgroundManager.Draw(_mainPlayer.PlayerMovement);
+
+        _mainPlayer.Draw(_spriteBatch);
 
         foreach (BoulderEnemy boulder in listBouldersEnemies)
         {
-            boulder.Draw(_spriteBatch, _player.PlayerMovement);
+            boulder.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
             _spriteBatch.DrawString(_font, $"{boulder.viewportPosition.X}      {boulder.viewportPosition.Y}", Vector2.Zero, Color.Red);
         }
-        _spriteBatch.DrawString(_font, $"{_player.PlayerMovement.X}      {_player.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
+        _spriteBatch.DrawString(_font, $"{_mainPlayer.PlayerMovement.X}      {_mainPlayer.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
+
+        foreach (Border border in listBorder)
+        {
+            border.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
+        }
 
         _spriteBatch.End();
         base.Draw(gameTime);
