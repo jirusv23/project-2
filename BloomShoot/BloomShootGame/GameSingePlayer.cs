@@ -1,9 +1,12 @@
-﻿using BloomShootGame;
+using BloomShootGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 
 namespace BloomShootGameSinglePlayer;
@@ -14,7 +17,7 @@ public class BloomShootGameSinglePlayerProgram : Game
     private SpriteBatch _spriteBatch;
 
     private Vector2 _middleOfScreen;
-    
+
     private PlayerLocal _mainPlayer;
     private List<BoulderEnemy> listBouldersEnemies = [];
     private Texture2D boulderEnemyTexture;
@@ -22,16 +25,24 @@ public class BloomShootGameSinglePlayerProgram : Game
 
     private Texture2D[] BackgroundTextureList;
     private BackgroundManager BackgroundManager;
+
+    private Border[] listBorder;
+    private int borderEdgeDistance = 4;
+    private int borderThickness = 3;
+    private Color borderColor = Color.Red;
+
+    private Vector2Visualizer visuliazer;
+    // border is left from left top corder by -(windowWidth/borderEdgeDistance)
     public BloomShootGameSinglePlayerProgram()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        
+
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
         _graphics.IsFullScreen = true;
-        
+
         _graphics.ApplyChanges();
     }
 
@@ -45,7 +56,8 @@ public class BloomShootGameSinglePlayerProgram : Game
         // Camera follows this player
         _mainPlayer = new PlayerLocal(GraphicsDevice, _middleOfScreen);
 
-        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _mainPlayer.PlayerMovement, new Vector2(_graphics.PreferredBackBufferWidth/2, _graphics.PreferredBackBufferHeight / 2)));
+        listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _mainPlayer.PlayerMovement, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2)));
+        visuliazer = new Vector2Visualizer(GraphicsDevice, _mainPlayer._position);
 
         base.Initialize();
     }
@@ -54,11 +66,20 @@ public class BloomShootGameSinglePlayerProgram : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        borderColor = new Color(41, 0, 148, 125);
+        listBorder =
+        [
+            // In order: left[0], right[1], top[2], down[3]
+            new Border(GraphicsDevice,new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),borderColor ,_graphics.PreferredBackBufferHeight + (2*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
+            new Border(GraphicsDevice,new Vector2(_graphics.PreferredBackBufferWidth + _graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance),borderColor ,_graphics.PreferredBackBufferHeight + (2*_graphics.PreferredBackBufferHeight)/borderEdgeDistance,borderThickness),
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,-_graphics.PreferredBackBufferHeight/borderEdgeDistance), borderColor , borderThickness, _graphics.PreferredBackBufferWidth + (2*_graphics.PreferredBackBufferWidth)/borderEdgeDistance),
+            new Border(GraphicsDevice, new Vector2(-_graphics.PreferredBackBufferWidth/borderEdgeDistance,_graphics.PreferredBackBufferHeight + _graphics.PreferredBackBufferHeight/borderEdgeDistance), borderColor , borderThickness, _graphics.PreferredBackBufferWidth + (2*_graphics.PreferredBackBufferWidth)/borderEdgeDistance)
+        ];
 
         BackgroundTextureList = [
             Content.Load<Texture2D>("space_background")
-        ]; 
-        
+        ];
+
         BackgroundManager = new BackgroundManager(_spriteBatch, BackgroundTextureList, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
     }
 
@@ -69,26 +90,28 @@ public class BloomShootGameSinglePlayerProgram : Game
             Exit();
 
         var KeyboardState = Keyboard.GetState();
-        
+
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
+        // Handles player movement
         Vector2 direction = Vector2.Zero;
-        
+
         if (KeyboardState.IsKeyDown(Keys.W)) { direction.Y -= 1; }
         if (KeyboardState.IsKeyDown(Keys.S)) { direction.Y += 1; }
         if (KeyboardState.IsKeyDown(Keys.A)) { direction.X -= 1; }
         if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
-        
+
         _mainPlayer.Move(direction);
 
-        foreach (BoulderEnemy boulder in listBouldersEnemies)
+        if (KeyboardState.IsKeyDown(Keys.H))
         {
-            if (KeyboardState.IsKeyDown(Keys.T)) { boulder.DebugMovement(); };
-        }
+            _mainPlayer._position = new Vector2(_mainPlayer._position.X += 15, _mainPlayer._position.Y += 6);
+            _mainPlayer.PlayerMovement = new Vector2(_mainPlayer.PlayerMovement.X += 15, _mainPlayer.PlayerMovement.Y += 6);
 
-        base.Update(gameTime);
+            base.Update(gameTime);
+        }
     }
 
     protected override void Draw(GameTime gameTime)
@@ -96,18 +119,40 @@ public class BloomShootGameSinglePlayerProgram : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
+
+        // Draws background
         BackgroundManager.Draw(_mainPlayer.PlayerMovement);
 
+        // Handles character
         _mainPlayer.Draw(_spriteBatch);
+        _mainPlayer.Update();
 
+
+        // Handles border enemy
         foreach (BoulderEnemy boulder in listBouldersEnemies)
         {
             boulder.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
-            _spriteBatch.DrawString(_font, $"{boulder.viewportPosition.X}      {boulder.viewportPosition.Y}", Vector2.Zero, Color.Red);
         }
-        _spriteBatch.DrawString(_font, $"{_mainPlayer.PlayerMovement.X}      {_mainPlayer.PlayerMovement.Y}", new Vector2(_graphics.PreferredBackBufferWidth - 90, 0), Color.Red);
+
+
+        // Handles border
+        for (int i = 0; i < listBorder.Length; i++)
+        {
+            listBorder[i].Draw(_spriteBatch);
+            listBorder[i].Update(_mainPlayer.PlayerMovement);
+
+            // Checks collision with every border and adjust the player _velocity accordingly
+            if (listBorder[i].borderRectangle.Intersects(_mainPlayer.playerRectangle))
+            {
+                _mainPlayer.HitAWall(i, listBorder[i].borderRectangle);
+            }
+        }
+
+        // Debug
+        visuliazer.DrawVector(_spriteBatch, _mainPlayer._velocity*10);
 
         _spriteBatch.End();
         base.Draw(gameTime);
+
     }
 }

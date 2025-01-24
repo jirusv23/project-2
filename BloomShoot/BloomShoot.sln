@@ -1,8 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BloomShootGame", "BloomShootGame\BloomShootGame.csproj", "{2053ADF1-246E-433E-9739-27D4EDC1294C}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BloomShootGame", "BloomShootGame\BloomShootGame.csproj", "{2053ADF1-246E-433E-9739-27D4EDC1294C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BloomShootServer", "BloomShootServer\BloomShootServer.csproj", "{3A979ECB-F4C3-42C6-9775-6B236713B9C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BloomShootServer", "BloomShootServer\BloomShootServer.csproj", "{3A979ECB-F4C3-42C6-9775-6B236713B9C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2CCBE311-CB8D-4545-B4B8-34E0CF1D78D1}"
+	ProjectSection(SolutionItems) = preProject
+		todo.txt = todo.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +26,11 @@ Global
 		{3A979ECB-F4C3-42C6-9775-6B236713B9C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A979ECB-F4C3-42C6-9775-6B236713B9C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A979ECB-F4C3-42C6-9775-6B236713B9C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FBF65F7E-76D5-4B40-92CD-1ADA588D5150}
 	EndGlobalSection
 EndGlobal
