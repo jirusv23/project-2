@@ -24,7 +24,7 @@ internal class Program
                         Debug.WriteLine("Started singleplayer"); 
                         game.Run();
                     }
-                    break;
+                    goto startMenuLoop;
 
                 case 0:
                     using (var gameMenu = new MultiplayerMenu())
