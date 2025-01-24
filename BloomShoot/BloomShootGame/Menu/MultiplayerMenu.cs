@@ -1,10 +1,8 @@
-﻿using System;
-using BloomShootGame.Menu;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace BloomShootGame;
+namespace BloomShootGame.Menu;
 
 public class MultiplayerMenu : Game
 {

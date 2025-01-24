@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using BloomShootGame.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BloomShootGame;
+namespace BloomShootGame.Player;
 
 
 public class PlayerOther
