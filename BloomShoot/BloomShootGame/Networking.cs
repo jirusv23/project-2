@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Text.Json;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -123,7 +125,8 @@ public class Client
         try
         {
             string jsonString = reader.GetString();
-
+            Console.WriteLine(jsonString);
+            
             if (jsonString is "1" or "2")
             {
                 ownID = $"player{jsonString}";

@@ -80,7 +80,8 @@ public class Server : IDisposable
                 _serverReceivedMessages = serverReceivedMessagesList.ToArray();
 
                 // Echo the message back to all clients
-                BroadcastMessage($"Client {peer.Address} says: {message}");
+                //BroadcastMessage($"Client {peer.Address} says: {message}");
+                BroadcastMessage(message);
             }
         }
         finally
