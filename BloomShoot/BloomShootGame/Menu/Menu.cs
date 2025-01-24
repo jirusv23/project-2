@@ -22,7 +22,7 @@ public class BloomShootMenuProgram : Game
 
     private float _firstButtonHeight = 100f; private float _buttonDistance = 50f;
     private Vector2 _buttonSize = new Vector2(250, 100);
-    private MenuButton _buttonSingle; private MenuButton _buttonMulti; private MenuButton _buttonExit;
+    private MenuButton _buttonSingle; private MenuButton _buttonMulti; private MenuButton _buttonExit; private MenuButton _buttonSetting;
     private SpriteFont _buttonFont;
 
     public BloomShootMenuProgram()
@@ -51,7 +51,8 @@ public class BloomShootMenuProgram : Game
 
         _buttonSingle = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X / 2, _firstButtonHeight), _buttonSize, Color.White, 1, _buttonFont);
         _buttonMulti = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X / 2, _firstButtonHeight + _buttonSize.Y + _buttonDistance), _buttonSize, Color.White, 0, _buttonFont);
-        _buttonExit = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X / 2, _firstButtonHeight + _buttonSize.Y * 2 + _buttonDistance * 2), _buttonSize, Color.White, 2, _buttonFont);
+        _buttonSetting = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X / 2, _firstButtonHeight + _buttonSize.Y * 2 + _buttonDistance * 2), _buttonSize, Color.White, 3, _buttonFont);
+        _buttonExit = new MenuButton(GraphicsDevice, new Vector2(_middleOfScreen.X - _buttonSize.X / 2, _firstButtonHeight + _buttonSize.Y * 3 + _buttonDistance * 3), _buttonSize, Color.White, 2, _buttonFont);
     }
 
     protected override void Update(GameTime gameTime)
@@ -77,6 +78,10 @@ public class BloomShootMenuProgram : Game
             {
                 _selectedGameSettings = 2; Exit();
             }
+            else if (_buttonSetting.WithinBounds(new Vector2(mouseState.X, mouseState.Y)));
+            {
+                _selectedGameSettings = 3; Exit();
+            }
         }
 
         base.Update(gameTime);
@@ -91,6 +96,7 @@ public class BloomShootMenuProgram : Game
         _buttonSingle.Draw(_spriteBatch, _buttonFont);
         _buttonMulti.Draw(_spriteBatch, _buttonFont);
         _buttonExit.Draw(_spriteBatch, _buttonFont);
+        _buttonSetting.Draw(_spriteBatch, _buttonFont);
 
         _spriteBatch.End();
 

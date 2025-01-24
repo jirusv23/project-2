@@ -36,6 +36,9 @@ public class MenuButton
             case 2:
                 _actionText = "Exit";
                 break;
+            case 3:
+                _actionText = "Settings";
+                break;
         }
 
         _textSize = font.MeasureString(_actionText);
