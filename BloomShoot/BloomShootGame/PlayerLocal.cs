@@ -85,14 +85,14 @@ public class PlayerLocal
         float velocityDecreaseMultiplier = 0.8f;
 
         if (direction == 0)  // left 
-            {
+        { 
             PlayerMovement.X += 1;
             // makes sure the player can't shift throught at low speed
             _velocity.X *= -1;
             // flips the velocity
             _velocity *= velocityDecreaseMultiplier;
             // decreases speed
-            }
+        }
         else if (direction == 1) //right
         {
             PlayerMovement.X += -1;
