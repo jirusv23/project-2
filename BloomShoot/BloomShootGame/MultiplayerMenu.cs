@@ -20,7 +20,7 @@ public class MultiplayerMenu : Game
     private textInputBox _ipAddressBox;
     
     private float _firstButtonHeight = 100f; private float _buttonDistance = 150f;
-    private Vector2 _buttonSize = new Vector2(250, 100);
+    private Vector2 _buttonSize = new Vector2(250, 50);
     
     private KeyboardState _oldKeyboardState;
     private KeyboardState _newKeyboardState;

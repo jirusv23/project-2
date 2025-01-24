@@ -31,7 +31,7 @@ public class BloomShootGameProgram : Game
         
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
-        //_graphics.IsFullScreen = true;
+        _graphics.IsFullScreen = true;
         
         _password = password;
         _ip = ip;
@@ -95,6 +95,8 @@ public class BloomShootGameProgram : Game
 
         if (_client.CurrentState == Client.ConnectionState.Connected)
         {
+            //Console.Write("test");
+            
             Vector2 direction = Vector2.Zero;
         
             if (KeyboardState.IsKeyDown(Keys.W)) { direction.Y -= 1; }
