@@ -96,7 +96,7 @@ public class BloomShootGameProgram : Game
 
         if (_client.CurrentState == Client.ConnectionState.Connected)
         {
-            //Console.Write("test");
+            Console.Write("test");
             
             Vector2 direction = Vector2.Zero;
         
@@ -106,7 +106,7 @@ public class BloomShootGameProgram : Game
             if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
         
             _playerLocal.Move(direction);
-            
+            _playerLocal.Update();
 
             // Send local player state to server
             _client.SendPlayerState(

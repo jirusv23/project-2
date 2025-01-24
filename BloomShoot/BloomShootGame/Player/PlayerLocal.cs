@@ -77,6 +77,7 @@ public class PlayerLocal
 
     public void Update()
     {
+        _position += _velocity;
         _playerMovement += _velocity;
         _playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
     }
