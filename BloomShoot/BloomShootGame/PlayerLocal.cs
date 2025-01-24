@@ -7,25 +7,27 @@ namespace BloomShootGame;
 
 public class PlayerLocal
 {
-    // change _position and _velocity, _acceleration, _deceleration => private (debuging)
-    internal Vector2 _position;
+    private Vector2 _position;
     public Vector2 Position => _position;
-    // PlayerMovement is value by how much the player moved so we can shift every enemy accordíngly, also serves as player coordinate (as long as they spawn on [0, 0]
-    public Vector2 PlayerMovement;
-    public Rectangle playerRectangle;
+
+    private Vector2 _playerMovement;
+    public Vector2 PlayerMovement => _playerMovement;
+    
+    private Rectangle _playerRectangle;
+    public Rectangle PlayerRectangle => _playerRectangle;
 
     private float _rotation; public float Rotation => _rotation;
     private Texture2D _texture;
 
     public int _width, _height;
 
-    internal Vector2 _velocity, _acceleration, _deceleration;
+    private Vector2 _velocity, _acceleration, _deceleration;
     private List<Bullet> _bullets;
 
     public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position)
     {
         _width = 30; _height = 30;
-        PlayerMovement = Vector2.Zero;
+        _playerMovement = Vector2.Zero;
         _position = new Vector2(position.X - _width / 2, position.Y - _height / 2);
         _rotation = 0f;
 
@@ -33,7 +35,7 @@ public class PlayerLocal
         _acceleration = new Vector2(0.1f, 0.1f);
         _deceleration = new Vector2(0.05f, 0.05f);
 
-        playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
+        _playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
 
         // TODO: vyměnit za texturu
         _texture = new Texture2D(graphicsDevice, _width, _height);
@@ -75,8 +77,8 @@ public class PlayerLocal
 
     public void Update()
     {
-        PlayerMovement += _velocity;
-        playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
+        _playerMovement += _velocity;
+        _playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
     }
 
     public void HitAWall(int direction, Rectangle borderRect)
@@ -86,7 +88,7 @@ public class PlayerLocal
 
         if (direction == 0)  // left 
         { 
-            PlayerMovement.X += 1;
+            _playerMovement.X += 1;
             // makes sure the player can't shift throught at low speed
             _velocity.X *= -1;
             // flips the velocity
@@ -95,20 +97,20 @@ public class PlayerLocal
         }
         else if (direction == 1) //right
         {
-            PlayerMovement.X += -1;
+            _playerMovement.X += -1;
             _velocity.X *= -1;
             _velocity *= velocityDecreaseMultiplier;
         }
 
         if (direction == 2)  // top 
         {
-            PlayerMovement.Y += 1;
+            _playerMovement.Y += 1;
             _velocity.Y *= -1;
             _velocity *= velocityDecreaseMultiplier;
         }
         else if (direction == 3) //down
         {
-            PlayerMovement.Y += -1;
+            _playerMovement.Y += -1;
             _velocity.Y *= -1;
             _velocity *= velocityDecreaseMultiplier;
         }

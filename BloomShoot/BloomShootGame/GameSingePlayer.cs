@@ -57,7 +57,7 @@ public class BloomShootGameSinglePlayerProgram : Game
         _mainPlayer = new PlayerLocal(GraphicsDevice, _middleOfScreen);
 
         listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _mainPlayer.PlayerMovement, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2)));
-        visuliazer = new Vector2Visualizer(GraphicsDevice, _mainPlayer._position);
+        //visuliazer = new Vector2Visualizer(GraphicsDevice, _mainPlayer._position);
 
         base.Initialize();
     }
@@ -105,13 +105,8 @@ public class BloomShootGameSinglePlayerProgram : Game
 
         _mainPlayer.Move(direction);
 
-        if (KeyboardState.IsKeyDown(Keys.H))
-        {
-            _mainPlayer._position = new Vector2(_mainPlayer._position.X += 15, _mainPlayer._position.Y += 6);
-            _mainPlayer.PlayerMovement = new Vector2(_mainPlayer.PlayerMovement.X += 15, _mainPlayer.PlayerMovement.Y += 6);
 
-            base.Update(gameTime);
-        }
+        base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
@@ -142,14 +137,14 @@ public class BloomShootGameSinglePlayerProgram : Game
             listBorder[i].Update(_mainPlayer.PlayerMovement);
 
             // Checks collision with every border and adjust the player _velocity accordingly
-            if (listBorder[i].borderRectangle.Intersects(_mainPlayer.playerRectangle))
+            if (listBorder[i].borderRectangle.Intersects(_mainPlayer.PlayerRectangle))
             {
                 _mainPlayer.HitAWall(i, listBorder[i].borderRectangle);
             }
         }
 
         // Debug
-        visuliazer.DrawVector(_spriteBatch, _mainPlayer._velocity*10);
+        //visuliazer.DrawVector(_spriteBatch, _mainPlayer._velocity*10);
 
         _spriteBatch.End();
         base.Draw(gameTime);
