@@ -56,7 +56,7 @@ public class BloomShootGameSinglePlayerProgram : Game
         boulderEnemyTexture = Content.Load<Texture2D>("boulder_texture");
 
         // Camera follows this player
-        _mainPlayer = new PlayerLocal(GraphicsDevice, _middleOfScreen);
+        _mainPlayer = new PlayerLocal(GraphicsDevice, _middleOfScreen, false);
 
         listBouldersEnemies.Add(new BoulderEnemy(boulderEnemyTexture, _mainPlayer.PlayerMovement, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2)));
         //visuliazer = new Vector2Visualizer(GraphicsDevice, _mainPlayer._position);

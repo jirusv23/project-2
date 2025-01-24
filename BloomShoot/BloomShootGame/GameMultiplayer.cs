@@ -44,7 +44,7 @@ public class BloomShootGameProgram : Game
     {
         _middleOfScreen = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
         
-        _playerLocal = new PlayerLocal(GraphicsDevice, _middleOfScreen);
+        _playerLocal = new PlayerLocal(GraphicsDevice, _middleOfScreen, true);
         _playerOther = new PlayerOther(GraphicsDevice, _middleOfScreen);
 
         _client = new Client(_password, _ip);

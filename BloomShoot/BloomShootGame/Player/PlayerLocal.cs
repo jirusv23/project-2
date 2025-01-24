@@ -24,7 +24,9 @@ public class PlayerLocal
     private Vector2 _velocity, _acceleration, _deceleration;
     private List<Bullet> _bullets;
 
-    public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position)
+    private bool _multi;
+
+    public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position, bool isMulti)
     {
         _width = 30; _height = 30;
         _playerMovement = Vector2.Zero;
@@ -36,6 +38,8 @@ public class PlayerLocal
         _deceleration = new Vector2(0.05f, 0.05f);
 
         _playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
+        
+        _multi = isMulti;
 
         // TODO: vyměnit za texturu
         _texture = new Texture2D(graphicsDevice, _width, _height);
@@ -77,7 +81,7 @@ public class PlayerLocal
 
     public void Update()
     {
-        _position += _velocity;
+        if (_multi) { _position += _velocity; }
         _playerMovement += _velocity;
         _playerRectangle = new Rectangle((int)_position.X, (int)_position.Y, _width, _height);
     }
