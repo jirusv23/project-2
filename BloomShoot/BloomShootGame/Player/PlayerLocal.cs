@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 
-namespace BloomShootGame;
+namespace BloomShootGame.Player;
 
 public class PlayerLocal
 {
@@ -12,7 +12,7 @@ public class PlayerLocal
 
     private Vector2 _playerMovement;
     public Vector2 PlayerMovement => _playerMovement;
-    
+
     private Rectangle _playerRectangle;
     public Rectangle PlayerRectangle => _playerRectangle;
 
@@ -87,7 +87,7 @@ public class PlayerLocal
         float velocityDecreaseMultiplier = 0.8f;
 
         if (direction == 0)  // left 
-        { 
+        {
             _playerMovement.X += 1;
             // makes sure the player can't shift throught at low speed
             _velocity.X *= -1;

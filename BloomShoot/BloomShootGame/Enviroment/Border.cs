@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BloomShootGame
+namespace BloomShootGame.Enviroment
 {
     internal class Border
     {
@@ -15,9 +15,9 @@ namespace BloomShootGame
         private Texture2D _texture;
         private Color[,] colors;
 
-        public Border(GraphicsDevice graphicsDevice, Vector2 positionInWorld, Color color, int height, int width) 
+        public Border(GraphicsDevice graphicsDevice, Vector2 positionInWorld, Color color, int height, int width)
         {
-            this.PositionInWorld = positionInWorld;
+            PositionInWorld = positionInWorld;
             this.width = width;
             this.height = height;
             borderRectangle = new Rectangle((int)PositionInViewport.X, (int)PositionInViewport.Y, width, height);

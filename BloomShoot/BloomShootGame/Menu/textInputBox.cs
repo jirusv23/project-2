@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BloomShootGame;
+namespace BloomShootGame.Menu;
 
 
 public class textInputBox
@@ -14,16 +14,16 @@ public class textInputBox
     private Vector2 _position;
     public Vector2 Position => _position;
     private Vector2 _size;
-    
+
     public textInputBox(Vector2 position, GraphicsDevice graphicsDevice, int width, int height, SpriteFont font)
     {
         _texture = new Texture2D(graphicsDevice, 1, 1);
         _texture.SetData(new Color[] { Color.White });
-        
+
         _font = font;
         _position = position;
         _size = new Vector2(width, height);
-        
+
         _rectangle = new Rectangle((int)position.X - 15, (int)position.Y - 15, width, height);
     }
 
@@ -55,7 +55,7 @@ public class textInputBox
 
         return text;
     }
-    
+
     public bool WithinBounds(Vector2 position)
     {
         if (_position.X < position.X && _position.X + _size.X > position.X)

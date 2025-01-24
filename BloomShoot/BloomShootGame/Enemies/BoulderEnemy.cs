@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BloomShootGame
+namespace BloomShootGame.Enemies
 {
     // Enemy which will only float and act as a mindless asteroid
     // Will split up on death into smaller asteroids
@@ -22,7 +22,7 @@ namespace BloomShootGame
         {
             // PlayerMovement mean how much the player moved so we can shift the position
             _texture = sourceTexture;
-            
+
             PositionInWorld = new Vector2(SpawnPosition.X, SpawnPosition.Y);
         }
         public void Draw(SpriteBatch _spriteBatch, Vector2 PlayerMovement)
