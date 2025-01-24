@@ -1,4 +1,6 @@
-using BloomShootGame;
+using BloomShootGame.Enemies;
+using BloomShootGame.Enviroment;
+using BloomShootGame.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -89,7 +91,7 @@ public class BloomShootGameSinglePlayerProgram : Game
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        var KeyboardState = Keyboard.GetState();
+        KeyboardState KeyboardState = Keyboard.GetState();
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))

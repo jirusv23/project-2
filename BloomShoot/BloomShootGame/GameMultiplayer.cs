@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using BloomShootGame.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

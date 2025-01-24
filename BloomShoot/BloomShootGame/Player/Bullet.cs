@@ -2,21 +2,21 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BloomShootGame;
+namespace BloomShootGame.Player;
 
 public class Bullet
 {
     private Vector2 _position; public Vector2 Position => _position;
     private Vector2 _velocity;
-    
+
     private Texture2D _texture;
     private int radius = 5;
-    
+
     public Bullet(GraphicsDevice graphicsDevice, Vector2 position, Color playerColor)
     {
         _position = position;
         _velocity = new Vector2(0, 0);
-        
+
         _texture = new Texture2D(graphicsDevice, radius, radius);
         CreateCircleTexture(playerColor);
     }
@@ -28,7 +28,7 @@ public class Bullet
 
     public void CreateCircleTexture(Color bulletColor)
     {
-        Color[] colorData = new Color[radius*radius];
+        Color[] colorData = new Color[radius * radius];
 
         float diam = radius / 2f;
         float diamsq = diam * diam;
@@ -56,9 +56,9 @@ public class Bullet
     {
         Vector2 direction = mousePosition - position;
         direction.Normalize();
-        
+
         Console.WriteLine(direction);
-        
+
         return direction;
     }
 }
