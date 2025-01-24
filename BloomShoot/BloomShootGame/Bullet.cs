@@ -12,13 +12,13 @@ public class Bullet
     private Texture2D _texture;
     private int radius = 5;
     
-    public Bullet(GraphicsDevice graphicsDevice, Vector2 position)
+    public Bullet(GraphicsDevice graphicsDevice, Vector2 position, Color playerColor)
     {
         _position = position;
         _velocity = new Vector2(0, 0);
         
         _texture = new Texture2D(graphicsDevice, radius, radius);
-        CreateCircleTexture();
+        CreateCircleTexture(playerColor);
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -26,7 +26,7 @@ public class Bullet
         spriteBatch.Draw(_texture, _position, Color.White);
     }
 
-    public void CreateCircleTexture()
+    public void CreateCircleTexture(Color bulletColor)
     {
         Color[] colorData = new Color[radius*radius];
 
@@ -41,7 +41,7 @@ public class Bullet
                 Vector2 pos = new Vector2(x - diam, y - diam);
                 if (pos.LengthSquared() <= diamsq)
                 {
-                    colorData[index] = Color.White;
+                    colorData[index] = bulletColor;
                 }
                 else
                 {
