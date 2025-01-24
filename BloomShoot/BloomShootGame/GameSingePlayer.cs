@@ -87,14 +87,9 @@ public class BloomShootGameSinglePlayerProgram : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
         KeyboardState KeyboardState = Keyboard.GetState();
 
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (KeyboardState.IsKeyDown(Keys.Escape))
             Exit();
 
         // Handles player movement
@@ -106,36 +101,11 @@ public class BloomShootGameSinglePlayerProgram : Game
         if (KeyboardState.IsKeyDown(Keys.D)) { direction.X += 1; }
 
         _mainPlayer.Move(direction);
-
-
-        base.Update(gameTime);
-    }
-
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
-
-        _spriteBatch.Begin();
-
-        // Draws background
-        BackgroundManager.Draw(_mainPlayer.PlayerMovement);
-
-        // Handles character
-        _mainPlayer.Draw(_spriteBatch);
         _mainPlayer.Update();
-
-
-        // Handles border enemy
-        foreach (BoulderEnemy boulder in listBouldersEnemies)
-        {
-            boulder.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
-        }
-
 
         // Handles border
         for (int i = 0; i < listBorder.Length; i++)
         {
-            listBorder[i].Draw(_spriteBatch);
             listBorder[i].Update(_mainPlayer.PlayerMovement);
 
             // Checks collision with every border and adjust the player _velocity accordingly
@@ -145,8 +115,34 @@ public class BloomShootGameSinglePlayerProgram : Game
             }
         }
 
+        base.Update(gameTime);
+    }
+
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.CornflowerBlue);
+        _spriteBatch.Begin();
+
+        // Draws background
+        BackgroundManager.Draw(_mainPlayer.PlayerMovement);
+
+        // Handles character
+        _mainPlayer.Draw(_spriteBatch);
+
+        // Handles boulder enemy
+        foreach (BoulderEnemy boulder in listBouldersEnemies)
+        {
+            boulder.Draw(_spriteBatch, _mainPlayer.PlayerMovement);
+        }
+
+        // Handles border
+        for (int i = 0; i < listBorder.Length; i++)
+        {
+            listBorder[i].Draw(_spriteBatch);
+        }
+
         // Debug
-        //visuliazer.DrawVector(_spriteBatch, _mainPlayer._velocity*10);
+        visuliazer.DrawVector(_spriteBatch, _mainPlayer.Velocity*10);
 
         _spriteBatch.End();
         base.Draw(gameTime);

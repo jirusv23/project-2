@@ -22,6 +22,7 @@ public class PlayerLocal
     public int _width, _height;
 
     private Vector2 _velocity, _acceleration, _deceleration;
+    public Vector2 Velocity => _velocity;
     private List<Bullet> _bullets;
 
     public PlayerLocal(GraphicsDevice graphicsDevice, Vector2 position)
