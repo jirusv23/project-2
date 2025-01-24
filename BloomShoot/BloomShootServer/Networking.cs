@@ -16,12 +16,16 @@ public class Server : IDisposable
     private bool isDisposed = false;
     private int port;
     
+    private ConnectedUsers _connectedUsers;
+    public ConnectedUsers ConnectedUsers => _connectedUsers;
+    
     private string[] _serverReceivedMessages;
     public string[] ServerReceivedMessages => _serverReceivedMessages;
 
     public Server(string password, int port)
     {
         _serverReceivedMessages = [];
+        _connectedUsers = new ConnectedUsers();
         
         server = new NetManager(listener);
         if (!server.Start(port))
@@ -38,10 +42,22 @@ public class Server : IDisposable
         listener.PeerConnectedEvent += peer =>
         {
             Console.WriteLine($"Client connected: {peer.Address}");
+            
             List<string> serverReceivedMessagesList = _serverReceivedMessages.ToList();
             serverReceivedMessagesList.Add($"Client connected: {peer.Address}");
             _serverReceivedMessages = serverReceivedMessagesList.ToArray();
+            
             SendMessageToClient(peer, $"{server.ConnectedPeersCount}");
+
+            switch (server.ConnectedPeersCount)
+            {
+                case 1:
+                    _connectedUsers.Peer1.PeerConnected($"peer.Address", 1);
+                    break;
+                case 2:
+                    _connectedUsers.Peer1.PeerConnected($"peer.Address", 2);
+                    break;
+            }
         };
 
         listener.NetworkReceiveEvent += OnNetworkReceive;
@@ -117,6 +133,40 @@ public class Server : IDisposable
         GC.SuppressFinalize(this);
     }
 }
+
+public struct ConnectedUsers
+{
+    private PeerInfo peer1;
+    private PeerInfo peer2;
+    
+    public PeerInfo Peer1 => peer1;
+    public PeerInfo Peer2 => peer2;
+
+    public ConnectedUsers()
+    {
+        peer1 = new PeerInfo();
+        peer2 = new PeerInfo();
+    }
+}
+
+public struct PeerInfo
+{
+    private string _ipAddress;
+    private int _id;
+    
+    public string IpAddress => _ipAddress;
+    public int Id => _id;
+    
+    public PeerInfo()
+    { }
+
+    public void PeerConnected(string ipAddress, int id)
+    {
+        _ipAddress = ipAddress;
+        _id = id;  
+    }
+}
+
 
 struct NetworkSettings
 {
