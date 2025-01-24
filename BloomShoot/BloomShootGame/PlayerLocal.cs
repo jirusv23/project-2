@@ -64,21 +64,13 @@ public class PlayerLocal
         if (_velocity.Y > 10) _velocity.Y = 10;
         if (_velocity.Y < -10) _velocity.Y = -10;
 
-        if (_velocity.X > 0) 
-            { _velocity.X -= _deceleration.X; }
-        else if (_velocity.X < 0) 
-            { _velocity.X += _deceleration.X; }
-        if (_velocity.Y > 0) 
-            { _velocity.Y -= _deceleration.Y; }
-        else if (_velocity.Y < 0) 
-            { _velocity.Y += _deceleration.Y; }
+        if (_velocity.X > 0) { _velocity.X -= _deceleration.X; }
+        else if (_velocity.X < 0) { _velocity.X += _deceleration.X; }
+        if (_velocity.Y > 0) { _velocity.Y -= _deceleration.Y; }
+        else if (_velocity.Y < 0) { _velocity.Y += _deceleration.Y; }
 
-        if (double.Abs(_velocity.X) < 0.05f) 
-            { _velocity.X = 0; }
-        if (double.Abs(_velocity.Y) < 0.05f) 
-            { _velocity.Y = 0; }
-
-        //_position += _velocity;
+        if (double.Abs(_velocity.X) < 0.05f) { _velocity.X = 0; }
+        if (double.Abs(_velocity.Y) < 0.05f) { _velocity.Y = 0; }
     }
 
     public void Update()
