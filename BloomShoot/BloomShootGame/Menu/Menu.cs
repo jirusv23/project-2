@@ -78,7 +78,7 @@ public class BloomShootMenuProgram : Game
             {
                 _selectedGameSettings = 2; Exit();
             }
-            else if (_buttonSetting.WithinBounds(new Vector2(mouseState.X, mouseState.Y)));
+            else if (_buttonSetting.WithinBounds(new Vector2(mouseState.X, mouseState.Y)))
             {
                 _selectedGameSettings = 3; Exit();
             }

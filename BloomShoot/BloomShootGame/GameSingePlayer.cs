@@ -142,7 +142,7 @@ public class BloomShootGameSinglePlayerProgram : Game
         }
 
         // Debug
-        visuliazer.DrawVector(_spriteBatch, _mainPlayer.Velocity*10);
+        //visuliazer.DrawVector(_spriteBatch, _mainPlayer.Velocity*10);
 
         _spriteBatch.End();
         base.Draw(gameTime);

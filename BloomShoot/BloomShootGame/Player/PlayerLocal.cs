@@ -74,6 +74,7 @@ public class PlayerLocal
 
         if (double.Abs(_velocity.X) < 0.05f) { _velocity.X = 0; }
         if (double.Abs(_velocity.Y) < 0.05f) { _velocity.Y = 0; }
+
     }
 
     public void Update()

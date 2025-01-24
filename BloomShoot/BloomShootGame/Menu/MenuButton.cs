@@ -40,7 +40,7 @@ public class MenuButton
                 _actionText = "Settings";
                 break;
         }
-
+        
         _textSize = font.MeasureString(_actionText);
 
         _texture = new Texture2D(graphicsDevice, (int)_size.X, (int)_size.Y);
