@@ -50,4 +50,9 @@ internal class Program
             }
         }
     }
+
+    static void sss(string s)
+    {
+        Debug.WriteLine(s);
+    }
 }
